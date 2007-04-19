@@ -22,18 +22,18 @@ Source5:	alias.sh
 Source6:	bashrc
 
 
-Patch1:         bash-2.02-security.patch
-Patch3:         bash-2.03-profile.patch
-Patch4:         bash-2.05b-readlinefixes.patch
-Patch6:         bash-2.04-compat.patch
-Patch9:         bash-2.05-s390x-unwind.patch
+Patch1:         bash-2.02-security.patch.bz2
+Patch3:         bash-2.03-profile.patch.bz2
+Patch4:         bash-2.05b-readlinefixes.patch.bz2
+Patch6:         bash-2.04-compat.patch.bz2
+Patch9:         bash-2.05-s390x-unwind.patch.bz2
 
-Patch13:        bash-2.05b-dietlibc.patch
+Patch13:        bash-2.05b-dietlibc.patch.bz2
 
-Patch80:	bash-2.05b-builtins.patch
-Patch90:	bash-2.05b-disable-nontrivial-matches.patch
+Patch80:	bash-2.05b-builtins.patch.bz2
+Patch90:	bash-2.05b-disable-nontrivial-matches.patch.bz2
 #https://bugzilla.novell.com/attachment.cgi?id=67684
-Patch100:	bash-3.1-extended_quote.patch
+Patch100:	bash-3.1-extended_quote.patch.bz2
 
 # Official upstream patches
 Patch101: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-001
@@ -45,9 +45,15 @@ Patch106: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-006
 Patch107: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-007
 Patch108: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-008
 Patch109: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-009
+Patch110: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-010
+Patch111: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-011
+Patch112: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-012
+Patch113: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-013
+Patch114: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-014
+Patch115: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-015
 
-Patch1000:	bash-strcoll-bug.diff
-Patch1003:	bash-2.05b-checkwinsize.patch
+Patch1000:	bash-strcoll-bug.diff.bz2
+Patch1003:	bash-2.05b-checkwinsize.patch.bz2
 
 %if %{build_dietlibc}
 BuildRequires:	dietlibc >= 0.26-3mdk
@@ -131,6 +137,12 @@ mv doc/README .
 %patch107 -p0 -b .pl007
 %patch108 -p0 -b .pl008
 %patch109 -p0 -b .pl009
+%patch110 -p0 -b .pl010
+%patch111 -p0 -b .pl011
+%patch112 -p0 -b .pl012
+%patch113 -p0 -b .pl013
+%patch114 -p0 -b .pl014
+%patch115 -p0 -b .pl015
 
 %patch80 -p0 -b .fix_so
 
@@ -293,5 +305,3 @@ rm -rf %{buildroot}
 %doc examples/scripts.noah/ examples/scripts.v2/ examples/scripts/
 %doc examples/startup-files/
 %doc doc/*.ps doc/*.0 doc/*.html doc/article.txt
-
-
