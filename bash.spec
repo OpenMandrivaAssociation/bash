@@ -1,6 +1,6 @@
 %define name	bash
 %define version	3.2
-%define release	%mkrel 1
+%define release	%mkrel 2
 %define i18ndate	20010626
 
 %define build_dietlibc	0
@@ -68,6 +68,8 @@ Conflicts:	setup < 2.7.4-1mdv
 BuildRoot:	%{_tmppath}/%{name}-%{version}
 Obsoletes: 	bash3
 Provides:	bash3
+# explicit file provides
+Provides:	/bin/sh
 
 %description
 Bash is a GNU project sh-compatible shell or command language
