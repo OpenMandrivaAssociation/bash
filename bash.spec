@@ -54,7 +54,7 @@ Patch115: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-015
 
 Patch1000:	bash-strcoll-bug.diff.bz2
 Patch1003:	bash-2.05b-checkwinsize.patch.bz2
-
+Patch1004:	bash-3.2-lzma-copmpletion.patch
 %if %{build_dietlibc}
 BuildRequires:	dietlibc >= 0.26-3mdk
 %endif
@@ -152,7 +152,7 @@ mv doc/README .
 
 %patch1000 -p1 -b .strcoll_bugx
 %patch1003 -p1 -b .checkwinsize
-
+%patch1004 -p1 -b .lzma
 %patch100 -p0 -b .quote
 
 echo %{version} > _distribution
