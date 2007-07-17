@@ -51,6 +51,8 @@ Patch112: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-012
 Patch113: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-013
 Patch114: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-014
 Patch115: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-015
+Patch116: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-015
+Patch117: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-015
 
 Patch1000:	bash-strcoll-bug.diff.bz2
 Patch1003:	bash-2.05b-checkwinsize.patch.bz2
@@ -145,6 +147,8 @@ mv doc/README .
 %patch113 -p0 -b .pl013
 %patch114 -p0 -b .pl014
 %patch115 -p0 -b .pl015
+%patch116 -p0 -b .pl016
+%patch117 -p0 -b .pl017
 
 %patch80 -p0 -b .fix_so
 
