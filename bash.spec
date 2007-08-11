@@ -258,10 +258,10 @@ cat man.pages |tr -s ' ' '\n' |sed '
 1i\
 %defattr(0644,root,root,0755)
 s:^:%{_mandir}/man1/:
-s/$/.1.bz2/
+s/$/.1%{_extension}/
 ' > ../man.pages
 
-perl -p -i -e 's!.*/(printf|export|echo|pwd|test|kill).1.bz2!!' ../man.pages
+perl -p -i -e 's!.*/(printf|export|echo|pwd|test|kill).1%{_extension}!!' ../man.pages
 
 mkdir -p %buildroot%{_sysconfdir}/skel
 mkdir -p %buildroot%{_sysconfdir}/profile.d
