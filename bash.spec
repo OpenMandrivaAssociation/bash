@@ -53,6 +53,14 @@ Patch114: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-014
 Patch115: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-015
 Patch116: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-016
 Patch117: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-017
+Patch118: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-018
+Patch119: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-019
+Patch120: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-020
+Patch121: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-021
+Patch122: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-022
+Patch123: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-023
+Patch124: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-024
+Patch125: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-025
 
 Patch1000:	bash-strcoll-bug.diff.bz2
 Patch1003:	bash-2.05b-checkwinsize.patch.bz2
@@ -149,6 +157,14 @@ mv doc/README .
 %patch115 -p0 -b .pl015
 %patch116 -p0 -b .pl016
 %patch117 -p0 -b .pl017
+%patch118 -p0 -b .pl018
+%patch119 -p0 -b .pl019
+%patch120 -p0 -b .pl020
+%patch121 -p0 -b .pl021
+%patch122 -p0 -b .pl022
+%patch123 -p0 -b .pl023
+%patch124 -p0 -b .pl024
+%patch125 -p0 -b .pl025
 
 %patch80 -p0 -b .fix_so
 
