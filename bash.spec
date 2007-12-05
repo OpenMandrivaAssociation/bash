@@ -160,11 +160,11 @@ mv doc/README .
 %patch118 -p0 -b .pl018
 %patch119 -p0 -b .pl019
 #%patch120 -p0 -b .pl020
-%patch121 -p0 -b .pl021
-%patch122 -p0 -b .pl022
-%patch123 -p0 -b .pl023
-%patch124 -p0 -b .pl024
-%patch125 -p0 -b .pl025
+#%patch121 -p0 -b .pl021
+#%patch122 -p0 -b .pl022
+#%patch123 -p0 -b .pl023
+#%patch124 -p0 -b .pl024
+#%patch125 -p0 -b .pl025
 
 %patch80 -p0 -b .fix_so
 
