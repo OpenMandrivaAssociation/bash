@@ -1,6 +1,6 @@
 %define name	bash
 %define version	3.2
-%define release	%mkrel 6
+%define release	%mkrel 7
 %define i18ndate	20010626
 
 %define build_dietlibc	0
@@ -159,7 +159,7 @@ mv doc/README .
 %patch117 -p0 -b .pl017
 %patch118 -p0 -b .pl018
 %patch119 -p0 -b .pl019
-%patch120 -p0 -b .pl020
+#%patch120 -p0 -b .pl020
 %patch121 -p0 -b .pl021
 %patch122 -p0 -b .pl022
 %patch123 -p0 -b .pl023
