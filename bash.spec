@@ -75,6 +75,7 @@ BuildRequires:	texinfo
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
 Conflicts:	setup < 2.7.4-1mdv
+BuildRoot:	%{_tmppath}/%{name}-%{version}
 Obsoletes: 	bash3
 Provides:	bash3
 # explicit file provides
