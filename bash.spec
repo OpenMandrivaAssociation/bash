@@ -1,6 +1,6 @@
 %define name	bash
 %define version	3.2
-%define release	%mkrel 8
+%define release	%mkrel 9
 %define i18ndate	20010626
 
 %define build_dietlibc	0
