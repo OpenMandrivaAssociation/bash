@@ -94,10 +94,6 @@ integer arithmetic in any base from two to 64. Bash is ultimately
 intended to conform to the IEEE POSIX P1003.2/ISO 9945.2 Shell and
 Tools standard.
 
-Bash is the default shell for Mandriva Linux. You should install
-bash because of its popularity and power. You'll probably end up
-using it.
-
 %package doc
 Group:		Books/Computer books
 Summary:	Documentation for the GNU Bourne Again shell (bash)
