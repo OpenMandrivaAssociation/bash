@@ -1,6 +1,6 @@
 %define name	bash
 %define version	3.2
-%define release	%mkrel 10
+%define release	%mkrel 11
 %define i18ndate	20010626
 
 %define build_dietlibc	0
@@ -61,6 +61,29 @@ Patch122: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-022
 Patch123: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-023
 Patch124: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-024
 Patch125: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-025
+Patch126: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-026
+Patch127: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-027
+Patch128: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-028
+Patch129: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-029
+Patch130: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-030
+Patch131: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-031
+Patch132: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-032
+Patch133: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-033
+Patch134: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-034
+Patch135: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-035
+Patch136: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-036
+Patch137: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-037
+Patch138: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-038
+Patch139: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-039
+Patch140: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-040
+Patch141: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-041
+Patch142: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-042
+Patch143: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-043
+Patch144: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-044
+Patch145: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-045
+Patch146: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-046
+Patch147: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-047
+Patch148: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-048
 
 Patch1000:	bash-strcoll-bug.diff.bz2
 Patch1003:	bash-2.05b-checkwinsize.patch.bz2
@@ -155,12 +178,35 @@ mv doc/README .
 %patch117 -p0 -b .pl017
 %patch118 -p0 -b .pl018
 %patch119 -p0 -b .pl019
-#%patch120 -p0 -b .pl020
-#%patch121 -p0 -b .pl021
-#%patch122 -p0 -b .pl022
-#%patch123 -p0 -b .pl023
-#%patch124 -p0 -b .pl024
-#%patch125 -p0 -b .pl025
+%patch120 -p0 -b .pl020
+%patch121 -p0 -b .pl021
+%patch122 -p0 -b .pl022
+%patch123 -p0 -b .pl023
+%patch124 -p0 -b .pl024
+%patch125 -p0 -b .pl025
+%patch126 -p0 -b .pl026
+%patch127 -p0 -b .pl027
+%patch128 -p0 -b .pl028
+%patch129 -p0 -b .pl029
+%patch130 -p0 -b .pl030
+%patch131 -p0 -b .pl031
+%patch132 -p0 -b .pl032
+%patch133 -p0 -b .pl033
+%patch134 -p0 -b .pl034
+%patch135 -p0 -b .pl035
+%patch136 -p0 -b .pl036
+%patch137 -p0 -b .pl037
+%patch138 -p0 -b .pl038
+%patch139 -p0 -b .pl039
+%patch140 -p0 -b .pl040
+%patch141 -p0 -b .pl041
+%patch142 -p0 -b .pl042
+%patch143 -p0 -b .pl043
+%patch144 -p0 -b .pl044
+%patch145 -p0 -b .pl045
+%patch146 -p0 -b .pl046
+%patch147 -p0 -b .pl047
+%patch148 -p0 -b .pl048
 
 %patch80 -p0 -b .fix_so
 
