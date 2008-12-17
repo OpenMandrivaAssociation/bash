@@ -1,9 +1,7 @@
 %define name	bash
 %define version	3.2
-%define release	%mkrel 11
+%define release	%mkrel 12
 %define i18ndate	20010626
-
-%define build_dietlibc	0
 
 Name:		%{name}
 Version:	%{version}
@@ -23,15 +21,12 @@ Source6:	bashrc
 
 
 Patch1:         bash-2.02-security.patch.bz2
-Patch3:         bash-2.03-profile.patch.bz2
+# ensure profile is read (Redhat)
+Patch3:         bash-2.03-profile.patch
 Patch4:         bash-2.05b-readlinefixes.patch.bz2
 Patch6:         bash-2.04-compat.patch.bz2
-Patch9:         bash-2.05-s390x-unwind.patch.bz2
-
-Patch13:        bash-2.05b-dietlibc.patch.bz2
 
 Patch80:	bash-2.05b-builtins.patch.bz2
-Patch90:	bash-2.05b-disable-nontrivial-matches.patch.bz2
 #https://bugzilla.novell.com/attachment.cgi?id=67684
 Patch100:	bash-3.1-extended_quote.patch.bz2
 
@@ -88,9 +83,10 @@ Patch148: ftp://ftp.gnu.org/gnu/bash/bash-3.2-patches/bash32-048
 Patch1000:	bash-strcoll-bug.diff.bz2
 Patch1003:	bash-2.05b-checkwinsize.patch.bz2
 Patch1004:	bash-3.2-lzma-copmpletion.patch
-%if %{build_dietlibc}
-BuildRequires:	dietlibc >= 0.26-3mdk
-%endif
+# (fc) 3.2-12mdv speedup bash completion (Fedora) (Fedora bug #475229)
+Patch1005:	bash-3.2-speed-completion.patch
+# (fc) 3.2-12mdv fix format string
+Patch1006:	bash-3.2-format-security.patch
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
 BuildRequires:	libtermcap-devel
@@ -153,11 +149,6 @@ mv doc/README .
 # 20060126 warly obsolete exept maybe for the replacement of @ by kH, this will have to be checked
 #%patch4 -p1 -b .readline
 %patch6 -p1 -b .compat
-%ifarch s390x
-%patch9 -p1 -b .s390x
-%endif
-
-%patch13 -p1 -b .dietlibc
 
 %patch101 -p0 -b .pl001
 %patch102 -p0 -b .pl002
@@ -210,58 +201,35 @@ mv doc/README .
 
 %patch80 -p0 -b .fix_so
 
-%patch90 -p0
-
 %patch1000 -p1 -b .strcoll_bugx
 %patch1003 -p1 -b .checkwinsize
 %patch1004 -p1 -b .lzma
+%patch1005 -p1 -b .speed
+%patch1006 -p1 -b .format-security
 %patch100 -p0 -b .quote
 
 echo %{version} > _distribution
 echo %{release} > _patchlevel
-perl -p -i -e s/mdk// _patchlevel
-
-# needed by patch13
-autoconf
+sed -i -e s/mdk// _patchlevel
 
 %build
-libtoolize --copy --force
+#libtoolize --copy --force
 
-# build statically linked bash with dietlibc
-%if %{build_dietlibc}
-# TODO: --enable-minimal-config?
-mkdir bash-static
-pushd bash-static
-export CFLAGS="$RPM_OPT_FLAGS -Os"
-export CONFIGURE_TOP=".."
-export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
-%configure2_5x \
-    --disable-command-timing \
-    --enable-dietlibc
-#    --enable-separate-helpfiles \
-#    --disable-nls
-#    --enable-minimal-config \
-%make
-popd
-%endif
-
-# build dynamically linked bash
-mkdir bash-dynamic
-pushd bash-dynamic
-export CFLAGS="$RPM_OPT_FLAGS"
-export CONFIGURE_TOP=".."
+#export CFLAGS="$RPM_OPT_FLAGS"
+#export CONFIGURE_TOP=".."
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 %configure2_5x \
     --disable-command-timing
-%make CFLAGS="$RPM_OPT_FLAGS"
+%make 
+#CFLAGS="$RPM_OPT_FLAGS"
 # all tests must pass
+%check
 make check
-popd
 
 %install
 rm -rf %{buildroot}
 
-%makeinstall -C bash-dynamic
+%makeinstall_std
 
 # beurk
 rm -rf %{buildroot}%{_datadir}/locale/en@boldquot/ %{buildroot}%{_datadir}/locale/en@quot/
@@ -285,10 +253,6 @@ mkdir -p %{buildroot}/bin
 pushd %{buildroot} && mv usr/bin/bash bin/bash && popd
 pushd %{buildroot}/bin && ln -s bash sh && popd
 pushd %{buildroot}/bin && ln -sf bash bash3 && popd
-
-%if %{build_dietlibc}
-install -m0755 bash-static/bash %{buildroot}/bin/bash-diet
-%endif
 
 # make manpages for bash builtins as per suggestion in DOC/README
 cd doc
@@ -336,7 +300,7 @@ rm -f %buildroot{%_infodir/dir,%_mandir/man1/{echo,export,kill,printf,pwd,test}.
 
 cd ..
 
-install -m 644 bash-dynamic/doc/bash.info %buildroot%{_infodir}/
+install -m 644 doc/bash.info %buildroot%{_infodir}/
 
 %clean
 rm -rf %{buildroot}
@@ -350,9 +314,6 @@ rm -rf %{buildroot}
 /bin/rbash
 /bin/bash
 /bin/bash3
-%if %{build_dietlibc}
-/bin/bash-diet
-%endif
 /bin/sh
 %{_infodir}/bash.info*
 %{_mandir}/man1/bash.1*
