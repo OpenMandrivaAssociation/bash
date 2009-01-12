@@ -16,18 +16,18 @@ Source4:	dot-bash_profile
 Source5:	dot-bash_logout
 Source6:	alias.sh
 Source7:	bashrc
-Patch1:		bash-2.02-security.patch.bz2
+Patch1:		bash-2.02-security.patch
 # ensure profile is read (Redhat)
 Patch3:		bash-2.03-profile.patch
-Patch4:		bash-2.05b-readlinefixes.patch.bz2
-Patch6:		bash-2.04-compat.patch.bz2
-Patch80:	bash-2.05b-builtins.patch.bz2
+Patch4:		bash-2.05b-readlinefixes.patch
+Patch6:		bash-2.04-compat.patch
+Patch80:	bash-2.05b-builtins.patch
 #https://bugzilla.novell.com/attachment.cgi?id=67684
-Patch100:	bash-3.1-extended_quote.patch.bz2
+Patch100:	bash-3.1-extended_quote.patch
 # Official upstream patches
 # none
-Patch1000:	bash-strcoll-bug.diff.bz2
-Patch1003:	bash-2.05b-checkwinsize.patch.bz2
+Patch1000:	bash-strcoll-bug.diff
+Patch1003:	bash-2.05b-checkwinsize.patch
 Patch1004:	bash-3.2-lzma-copmpletion.patch
 # (fc) 3.2-12mdv speedup bash completion (Fedora) (Fedora bug #475229)
 Patch1005:	bash-3.2-speed-completion.patch
