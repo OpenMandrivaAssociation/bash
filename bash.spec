@@ -4,7 +4,7 @@
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
 Version:	%{_rver}.48
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
@@ -82,7 +82,7 @@ mv doc/README .
 %patch1000 -p1 -b .strcoll_bugx
 %patch1003 -p1 -b .checkwinsize
 %patch1004 -p1 -b .lzma
-%patch1005 -p1 -b .speed
+#%patch1005 -p1 -b .speed
 %patch1006 -p1 -b .format-security
 %patch100 -p0 -b .quote
 
