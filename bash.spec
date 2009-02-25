@@ -4,7 +4,7 @@
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
 Version:	%{_rver}.48
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
