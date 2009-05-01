@@ -1,16 +1,15 @@
-%define _rver 3.2
 %define i18ndate 20010626
 
-Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
-Version:	%{_rver}.48
-Release:	%mkrel 3
+Version:	4.0
+Release:	%mkrel 1
+Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/bash-%{version}.tar.gz
 Source1:	%{SOURCE0}.sig
-Source2:	ftp://ftp.gnu.org/pub/gnu/bash/bash-doc-%{_rver}.tar.bz2
+Source2:	ftp://ftp.gnu.org/pub/gnu/bash/bash-doc-3.2.tar.bz2
 Source3:	dot-bashrc
 Source4:	dot-bash_profile
 Source5:	dot-bash_logout
@@ -18,13 +17,30 @@ Source6:	alias.sh
 Source7:	bashrc
 Patch1:		bash-2.02-security.patch
 # ensure profile is read (Redhat)
-Patch3:		bash-2.03-profile.patch
+Patch3:		bash-4.0-profile.patch
 Patch4:		bash-2.05b-readlinefixes.patch
 Patch6:		bash-2.04-compat.patch
-Patch80:	bash-2.05b-builtins.patch
+Patch80:	bash-2.05b-builtins-man-page.patch
 #https://bugzilla.novell.com/attachment.cgi?id=67684
 Patch100:	bash-3.1-extended_quote.patch
 # Official upstream patches
+Patch201:   bash40-001.patch
+Patch202:   bash40-002.patch
+Patch203:   bash40-003.patch
+Patch204:   bash40-004.patch
+Patch205:   bash40-005.patch
+Patch206:   bash40-006.patch
+Patch207:   bash40-007.patch
+Patch208:   bash40-008.patch
+Patch209:   bash40-009.patch
+Patch210:   bash40-010.patch
+Patch211:   bash40-011.patch
+Patch212:   bash40-012.patch
+Patch213:   bash40-013.patch
+Patch214:   bash40-014.patch
+Patch215:   bash40-015.patch
+Patch216:   bash40-016.patch
+Patch217:   bash40-017.patch
 # none
 Patch1000:	bash-strcoll-bug.diff
 Patch1003:	bash-2.05b-checkwinsize.patch
@@ -78,13 +94,30 @@ mv doc/README .
 # 20060126 warly obsolete exept maybe for the replacement of @ by kH, this will have to be checked
 #%patch4 -p1 -b .readline
 %patch6 -p1 -b .compat
-%patch80 -p0 -b .fix_so
+%patch80 -p1 -b .fix_so
 %patch1000 -p1 -b .strcoll_bugx
 %patch1003 -p1 -b .checkwinsize
 %patch1004 -p1 -b .lzma
-#%patch1005 -p1 -b .speed
 %patch1006 -p1 -b .format-security
 %patch100 -p0 -b .quote
+
+%patch201 -p0
+%patch202 -p0
+%patch203 -p0
+%patch204 -p0
+%patch205 -p0
+%patch206 -p0
+%patch207 -p0
+%patch208 -p0
+%patch209 -p0
+%patch210 -p0
+%patch211 -p0
+%patch212 -p0
+%patch213 -p0
+%patch214 -p0
+%patch215 -p0
+%patch216 -p0
+%patch217 -p0
 
 echo %{version} > _distribution
 echo %{release} > _patchlevel
@@ -187,10 +220,15 @@ cd ..
 
 install -m 644 doc/bash.info %{buildroot}%{_infodir}/
 
+%find_lang %{name}
+
+# merges list
+cat man.pages %{name}.lang > files.list
+
 %clean
 rm -rf %{buildroot}
 
-%files -f man.pages
+%files -f files.list
 %defattr(-,root,root)
 %doc README CHANGES
 %config(noreplace) %{_sysconfdir}/skel/.b*
@@ -211,7 +249,5 @@ rm -rf %{buildroot}
 %files doc
 %defattr(-,root,root)
 %doc COMPAT NEWS NOTES POSIX
-%doc examples/bashdb/ examples/functions/ examples/misc/
-%doc examples/scripts.noah/ examples/scripts.v2/ examples/scripts/
-%doc examples/startup-files/
+%doc examples
 %doc doc/*.ps doc/*.0 doc/*.html doc/article.txt
