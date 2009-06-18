@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.0
-Release:	%mkrel 2
+Release:	%mkrel 3
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -20,7 +20,6 @@ Patch1:		bash-2.02-security.patch
 Patch3:		bash-4.0-profile.patch
 Patch4:		bash-2.05b-readlinefixes.patch
 Patch6:		bash-2.04-compat.patch
-Patch80:	bash-2.05b-builtins-man-page.patch
 #https://bugzilla.novell.com/attachment.cgi?id=67684
 Patch100:	bash-3.1-extended_quote.patch
 # Official upstream patches
@@ -58,6 +57,7 @@ Patch1005:	bash-3.2-speed-completion.patch
 Patch1006:	bash-3.2-format-security.patch
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
+BuildRequires:	groff
 BuildRequires:	libtermcap-devel
 BuildRequires:	texinfo
 Conflicts:	etcskel <= 1.63-11mdk
@@ -101,7 +101,6 @@ mv doc/README .
 # 20060126 warly obsolete exept maybe for the replacement of @ by kH, this will have to be checked
 #%patch4 -p1 -b .readline
 %patch6 -p1 -b .compat
-%patch80 -p1 -b .fix_so
 %patch1000 -p1 -b .strcoll_bugx
 %patch1003 -p1 -b .checkwinsize
 %patch1004 -p1 -b .lzma
@@ -185,6 +184,17 @@ mkdir -p %{buildroot}/bin
 pushd %{buildroot} && mv usr/bin/bash bin/bash && popd
 pushd %{buildroot}/bin && ln -s bash sh && popd
 pushd %{buildroot}/bin && ln -sf bash bash3 && popd
+
+# make builtins.1 and rbash.1 with bash.1 in place (fix mdv#51379)
+pushd doc
+mkdir tmp_fix_so
+cd tmp_fix_so
+cp ../builtins.1 ../rbash.1 .
+sed -e '/^.if \\n(zZ=1 .ig zZ/,/^.zZ/d' ../bash.1 > bash.1
+soelim builtins.1 > ../builtins.1
+sed -e '/^.if \\n(zY=1 .ig zY/,/^.zY/d' ../bash.1 > bash.1
+soelim rbash.1    > ../rbash.1
+popd
 
 # make manpages for bash builtins as per suggestion in DOC/README
 cd doc
