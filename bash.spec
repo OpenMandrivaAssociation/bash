@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.0
-Release:	%mkrel 3
+Release:	%mkrel 4
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -151,7 +151,8 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
     --enable-multibyte \
     --enable-readline
 
-%make 
+# parallel build is broken
+make 
 #CFLAGS="$RPM_OPT_FLAGS"
 # all tests must pass
 %check
