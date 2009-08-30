@@ -2,12 +2,12 @@
 
 Name:		bash
 Version:	4.0
-Release:	%mkrel 4
+Release:	%mkrel 5
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
-Source0:	ftp://ftp.gnu.org/pub/gnu/bash/bash-%{version}.tar.gz
+Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{version}.tar.gz
 Source1:	%{SOURCE0}.sig
 Source2:	ftp://ftp.gnu.org/pub/gnu/bash/bash-doc-3.2.tar.bz2
 Source3:	dot-bashrc
@@ -47,6 +47,10 @@ Patch221:   bash40-021.patch
 Patch222:   bash40-022.patch
 Patch223:   bash40-023.patch
 Patch224:   bash40-024.patch
+Patch225:   bash40-025.patch
+Patch226:   bash40-026.patch
+Patch227:   bash40-027.patch
+Patch228:   bash40-028.patch
 # none
 Patch1000:	bash-strcoll-bug.diff
 Patch1003:	bash-2.05b-checkwinsize.patch
@@ -131,6 +135,10 @@ mv doc/README .
 %patch222 -p0
 %patch223 -p0
 %patch224 -p0
+%patch225 -p0
+%patch226 -p0
+%patch227 -p0
+%patch228 -p0
 
 echo %{version} > _distribution
 echo %{release} > _patchlevel
@@ -149,10 +157,12 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
     --enable-history \
     --enable-job-control \
     --enable-multibyte \
-    --enable-readline
+    --enable-readline \
+    --with-installed-readline \
+    --with-gnu-malloc \
+    --without-bash-malloc
 
-# parallel build is broken
-make 
+%make
 #CFLAGS="$RPM_OPT_FLAGS"
 # all tests must pass
 %check
