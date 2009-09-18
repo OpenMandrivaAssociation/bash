@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.0
-Release:	%mkrel 5
+Release:	%mkrel 6
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -51,6 +51,11 @@ Patch225:   bash40-025.patch
 Patch226:   bash40-026.patch
 Patch227:   bash40-027.patch
 Patch228:   bash40-028.patch
+Patch229:   bash40-029.patch
+Patch230:   bash40-030.patch
+Patch231:   bash40-031.patch
+Patch232:   bash40-032.patch
+Patch233:   bash40-033.patch
 # none
 Patch1000:	bash-strcoll-bug.diff
 Patch1003:	bash-2.05b-checkwinsize.patch
@@ -139,6 +144,11 @@ mv doc/README .
 %patch226 -p0
 %patch227 -p0
 %patch228 -p0
+%patch229 -p0
+%patch230 -p0
+%patch231 -p0
+%patch232 -p0
+%patch233 -p0
 
 echo %{version} > _distribution
 echo %{release} > _patchlevel
