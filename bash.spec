@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.0
-Release:	%mkrel 6
+Release:	%mkrel 7
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -275,7 +275,7 @@ rm -rf %{buildroot}
 
 %files -f files.list
 %defattr(-,root,root)
-%doc README CHANGES
+%doc README 
 %config(noreplace) %{_sysconfdir}/skel/.b*
 %{_sysconfdir}/profile.d/alias.sh
 %config(noreplace) %{_sysconfdir}/bashrc
@@ -293,6 +293,6 @@ rm -rf %{buildroot}
 
 %files doc
 %defattr(-,root,root)
-%doc COMPAT NEWS NOTES POSIX
+%doc COMPAT NEWS NOTES POSIX CHANGES
 %doc examples
 %doc doc/*.ps doc/*.0 doc/*.html doc/article.txt
