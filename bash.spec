@@ -253,7 +253,7 @@ mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/skel/.bashrc
 install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/skel/.bash_profile
 install -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/skel/.bash_logout
-install -m 755 %{SOURCE6} %{buildroot}%{_sysconfdir}/profile.d/alias.sh
+install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/profile.d/60alias.sh
 install -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/bashrc
 
 ln -s bash %{buildroot}/bin/rbash
