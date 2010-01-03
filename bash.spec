@@ -1,8 +1,8 @@
 %define i18ndate 20010626
 
 Name:		bash
-Version:	4.0
-Release:	%mkrel 7
+Version:	4.1
+Release:	%mkrel 1
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -23,39 +23,6 @@ Patch6:		bash-2.04-compat.patch
 #https://bugzilla.novell.com/attachment.cgi?id=67684
 Patch100:	bash-3.1-extended_quote.patch
 # Official upstream patches
-Patch201:   bash40-001.patch
-Patch202:   bash40-002.patch
-Patch203:   bash40-003.patch
-Patch204:   bash40-004.patch
-Patch205:   bash40-005.patch
-Patch206:   bash40-006.patch
-Patch207:   bash40-007.patch
-Patch208:   bash40-008.patch
-Patch209:   bash40-009.patch
-Patch210:   bash40-010.patch
-Patch211:   bash40-011.patch
-Patch212:   bash40-012.patch
-Patch213:   bash40-013.patch
-Patch214:   bash40-014.patch
-Patch215:   bash40-015.patch
-Patch216:   bash40-016.patch
-Patch217:   bash40-017.patch
-Patch218:   bash40-018.patch
-Patch219:   bash40-019.patch
-Patch220:   bash40-020.patch
-Patch221:   bash40-021.patch
-Patch222:   bash40-022.patch
-Patch223:   bash40-023.patch
-Patch224:   bash40-024.patch
-Patch225:   bash40-025.patch
-Patch226:   bash40-026.patch
-Patch227:   bash40-027.patch
-Patch228:   bash40-028.patch
-Patch229:   bash40-029.patch
-Patch230:   bash40-030.patch
-Patch231:   bash40-031.patch
-Patch232:   bash40-032.patch
-Patch233:   bash40-033.patch
 # none
 Patch1000:	bash-strcoll-bug.diff
 Patch1003:	bash-2.05b-checkwinsize.patch
@@ -115,40 +82,6 @@ mv doc/README .
 %patch1004 -p1 -b .lzma
 %patch1006 -p1 -b .format-security
 %patch100 -p0 -b .quote
-
-%patch201 -p0
-%patch202 -p0
-%patch203 -p0
-%patch204 -p0
-%patch205 -p0
-%patch206 -p0
-%patch207 -p0
-%patch208 -p0
-%patch209 -p0
-%patch210 -p0
-%patch211 -p0
-%patch212 -p0
-%patch213 -p0
-%patch214 -p0
-%patch215 -p0
-%patch216 -p0
-%patch217 -p0
-%patch218 -p0
-%patch219 -p0
-%patch220 -p0
-%patch221 -p0
-%patch222 -p0
-%patch223 -p0
-%patch224 -p0
-%patch225 -p0
-%patch226 -p0
-%patch227 -p0
-%patch228 -p0
-%patch229 -p0
-%patch230 -p0
-%patch231 -p0
-%patch232 -p0
-%patch233 -p0
 
 echo %{version} > _distribution
 echo %{release} > _patchlevel
@@ -277,7 +210,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %doc README 
 %config(noreplace) %{_sysconfdir}/skel/.b*
-%{_sysconfdir}/profile.d/alias.sh
+%{_sysconfdir}/profile.d/60alias.sh
 %config(noreplace) %{_sysconfdir}/bashrc
 /bin/rbash
 /bin/bash
