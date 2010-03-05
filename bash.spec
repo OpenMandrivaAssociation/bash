@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.1
-Release:	%mkrel 2
+Release:	%mkrel 3
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -15,6 +15,7 @@ Source4:	dot-bash_profile
 Source5:	dot-bash_logout
 Source6:	alias.sh
 Source7:	bashrc
+Source8:	profile.d-bash
 Patch1:		bash-2.02-security.patch
 # ensure profile is read (Redhat)
 Patch3:		bash-4.0-profile.patch
@@ -188,6 +189,7 @@ install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/skel/.bash_profile
 install -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/skel/.bash_logout
 install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/profile.d/60alias.sh
 install -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/bashrc
+install -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/profile.d/95bash-extras.sh
 
 ln -s bash %{buildroot}/bin/rbash
 
@@ -211,6 +213,7 @@ rm -rf %{buildroot}
 %doc README 
 %config(noreplace) %{_sysconfdir}/skel/.b*
 %{_sysconfdir}/profile.d/60alias.sh
+%{_sysconfdir}/profile.d/95bash-extras.sh
 %config(noreplace) %{_sysconfdir}/bashrc
 /bin/rbash
 /bin/bash
