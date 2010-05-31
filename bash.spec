@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.1
-Release:	%mkrel 4
+Release:	%mkrel 5
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
