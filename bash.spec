@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.1
-Release:	%mkrel 6
+Release:	%mkrel 7
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -29,6 +29,8 @@ Patch11:	bash41-002
 Patch12:	bash41-003
 Patch13:	bash41-004
 Patch14:	bash41-005
+Patch15:	bash41-006
+Patch16:	bash41-007
 # none
 Patch1000:	bash-strcoll-bug.diff
 Patch1003:	bash-2.05b-checkwinsize.patch
@@ -88,6 +90,8 @@ mv doc/README .
 %patch12 -p0 -b .003
 %patch13 -p0 -b .004
 %patch14 -p0 -b .005
+%patch15 -p0 -b .006
+%patch16 -p0 -b .007
 %patch1000 -p1 -b .strcoll_bugx
 %patch1003 -p1 -b .checkwinsize
 %patch1004 -p1 -b .lzma
@@ -99,25 +103,33 @@ echo %{release} > _patchlevel
 sed -i -e s/mdk// _patchlevel
 
 %build
-#libtoolize --copy --force
 
-#export CFLAGS="$RPM_OPT_FLAGS"
-#export CONFIGURE_TOP=".."
+export CFLAGS="%{optflags} -Os"
+export CXXFLAGS=$CFLAGS
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 %configure2_5x \
-    --disable-command-timing \
+    --enable-command-timing \
     --disable-rpath \
     --enable-history \
     --enable-job-control \
     --enable-multibyte \
     --enable-readline \
     --with-installed-readline \
-    --with-gnu-malloc \
-    --without-bash-malloc
+    --without-gnu-malloc \
+    --without-bash-malloc \
+    --disable-strict-posix-default \
+    --enable-select \
+    --enable-prompt-string-decoding \
+    --enable-process-substitution \
+    --enable-alias \
+    --enable-bang-history \
+    --enable-coprocesses \
+    --enable-directory-stack \
+    --enable-brace-expansion
 
 %make
-#CFLAGS="$RPM_OPT_FLAGS"
+
 # all tests must pass
 %check
 make check
