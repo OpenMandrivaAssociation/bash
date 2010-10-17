@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.1
-Release:	%mkrel 7
+Release:	%mkrel 8
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -31,6 +31,8 @@ Patch13:	bash41-004
 Patch14:	bash41-005
 Patch15:	bash41-006
 Patch16:	bash41-007
+Patch17:	bash41-008
+Patch18:	bash41-009
 # none
 Patch1000:	bash-strcoll-bug.diff
 Patch1003:	bash-2.05b-checkwinsize.patch
@@ -92,6 +94,8 @@ mv doc/README .
 %patch14 -p0 -b .005
 %patch15 -p0 -b .006
 %patch16 -p0 -b .007
+%patch17 -p0 -b .008
+%patch18 -p0 -b .009
 %patch1000 -p1 -b .strcoll_bugx
 %patch1003 -p1 -b .checkwinsize
 %patch1004 -p1 -b .lzma
