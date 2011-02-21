@@ -1,8 +1,8 @@
 %define i18ndate 20010626
 
 Name:		bash
-Version:	4.1
-Release:	%mkrel 8
+Version:	4.2
+Release:	%mkrel 1
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -24,15 +24,6 @@ Patch6:		bash-2.04-compat.patch
 #https://bugzilla.novell.com/attachment.cgi?id=67684
 Patch100:	bash-3.1-extended_quote.patch
 # Official upstream patches
-Patch10:	bash41-001
-Patch11:	bash41-002
-Patch12:	bash41-003
-Patch13:	bash41-004
-Patch14:	bash41-005
-Patch15:	bash41-006
-Patch16:	bash41-007
-Patch17:	bash41-008
-Patch18:	bash41-009
 # none
 Patch1000:	bash-strcoll-bug.diff
 Patch1003:	bash-2.05b-checkwinsize.patch
@@ -87,15 +78,6 @@ mv doc/README .
 # 20060126 warly obsolete exept maybe for the replacement of @ by kH, this will have to be checked
 #%patch4 -p1 -b .readline
 %patch6 -p1 -b .compat
-%patch10 -p0 -b .001
-%patch11 -p0 -b .002
-%patch12 -p0 -b .003
-%patch13 -p0 -b .004
-%patch14 -p0 -b .005
-%patch15 -p0 -b .006
-%patch16 -p0 -b .007
-%patch17 -p0 -b .008
-%patch18 -p0 -b .009
 %patch1000 -p1 -b .strcoll_bugx
 %patch1003 -p1 -b .checkwinsize
 %patch1004 -p1 -b .lzma
