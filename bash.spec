@@ -233,7 +233,6 @@ rm -rf %{buildroot}
 %{_mandir}/man1/builtins.1*
 %{_mandir}/man1/bashbug.1*
 %{_bindir}/bashbug
-%exclude %{_datadir}/locale/ru/LC_MESSAGES/bash.mo
 
 %files doc
 %defattr(-,root,root)
