@@ -202,7 +202,7 @@ install -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/profile.d/95bash-extras.sh
 ln -s bash %{buildroot}/bin/rbash
 
 # These're provided by other packages
-rm -f %{buildroot}{%{_infodir}/dir,%{_mandir}/man1/{echo,export,kill,printf,pwd,test,true}.1}
+rm -f %{buildroot}{%{_infodir}/dir,%{_mandir}/man1/{echo,export,false,kill,printf,pwd,test,true}.1}
 
 cd ..
 
