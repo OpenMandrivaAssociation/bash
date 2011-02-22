@@ -188,7 +188,7 @@ s:^:%{_mandir}/man1/:
 s/$/.1%{_extension}/
 ' > ../man.pages
 
-perl -p -i -e 's!.*/(printf|export|echo|pwd|test|true|kill).1%{_extension}!!' ../man.pages
+perl -p -i -e 's!.*/(printf|export|echo|false|pwd|test|true|kill).1%{_extension}!!' ../man.pages
 
 mkdir -p %{buildroot}%{_sysconfdir}/skel
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
