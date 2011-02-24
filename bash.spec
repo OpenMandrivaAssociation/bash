@@ -213,12 +213,20 @@ install -m 644 doc/bash.info %{buildroot}%{_infodir}/
 # merges list
 cat man.pages %{name}.lang > files.list
 
+# install documentation manually in expected place
+install -d -m 755 %{buildroot}%{_docdir}/%{name}
+install -m 644 README COMPAT NEWS NOTES POSIX CHANGES \
+    %{buildroot}%{_docdir}/%{name}
+cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
+    %{buildroot}%{_docdir}/%{name}
+
 %clean
 rm -rf %{buildroot}
 
 %files -f files.list
 %defattr(-,root,root)
-%doc README 
+%dir %{_docdir}/%{name}
+%{_docdir}/%{name}/README
 %config(noreplace) %{_sysconfdir}/skel/.b*
 %{_sysconfdir}/profile.d/60alias.sh
 %{_sysconfdir}/profile.d/95bash-extras.sh
@@ -236,6 +244,5 @@ rm -rf %{buildroot}
 
 %files doc
 %defattr(-,root,root)
-%doc COMPAT NEWS NOTES POSIX CHANGES
-%doc examples
-%doc doc/*.ps doc/*.0 doc/*.html doc/article.txt
+%{_docdir}/%{name}/*
+%exclude %{_docdir}/%{name}/README
