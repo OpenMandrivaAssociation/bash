@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.2
-Release:	%mkrel 4
+Release:	%mkrel 5
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -32,6 +32,8 @@ Patch1004:	bash-3.2-lzma-copmpletion.patch
 Patch1005:	bash-3.2-speed-completion.patch
 # (fc) 3.2-12mdv fix format string
 Patch1006:	bash-3.2-format-security.patch
+# (proyvind): 4.2-5 add --rpm-requires option (Fedora) (mdvbz#61712)
+Patch1007:	bash-requires.patch
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
 BuildRequires:	groff
@@ -82,6 +84,7 @@ mv doc/README .
 %patch1003 -p1 -b .checkwinsize
 %patch1004 -p1 -b .lzma
 %patch1006 -p1 -b .format-security
+%patch1007 -p1 -b .requires~
 %patch100 -p0 -b .quote
 
 echo %{version} > _distribution
