@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.2
-Release:	%mkrel 5
+Release:	%mkrel 6
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -34,6 +34,14 @@ Patch1005:	bash-3.2-speed-completion.patch
 Patch1006:	bash-3.2-format-security.patch
 # (proyvind): 4.2-5 add --rpm-requires option (Fedora) (mdvbz#61712)
 Patch1007:	bash-requires.patch
+Patch1008:	bash42-001
+Patch1009:	bash42-002
+Patch1010:	bash42-003
+Patch1011:	bash42-004
+Patch1012:	bash42-005
+Patch1013:	bash42-006
+Patch1014:	bash42-007
+Patch1015:	bash42-008
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
 BuildRequires:	groff
@@ -86,6 +94,14 @@ mv doc/README .
 %patch1006 -p1 -b .format-security
 %patch1007 -p1 -b .requires~
 %patch100 -p0 -b .quote
+%patch1008 -p0 -b .001
+%patch1009 -p0 -b .002
+%patch1010 -p0 -b .003
+%patch1011 -p0 -b .004
+%patch1012 -p0 -b .005
+%patch1013 -p0 -b .006
+%patch1014 -p0 -b .007
+%patch1015 -p0 -b .008
 
 echo %{version} > _distribution
 echo %{release} > _patchlevel
@@ -121,7 +137,7 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 # all tests must pass
 %check
-#make check
+make check
 
 %install
 rm -rf %{buildroot}
