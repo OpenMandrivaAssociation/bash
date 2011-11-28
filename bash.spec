@@ -135,8 +135,6 @@ echo %{release} > _patchlevel
 sed -i -e s/mdk// _patchlevel
 
 %build
-%serverbuild_hardened
-
 export CFLAGS="%{optflags} -Os"
 export CXXFLAGS="$CFLAGS"
 # (tpg) Enable RECYCLES_PIDS feature
