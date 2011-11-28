@@ -135,9 +135,12 @@ echo %{release} > _patchlevel
 sed -i -e s/mdk// _patchlevel
 
 %build
+%serverbuild_hardened
 
 export CFLAGS="%{optflags} -Os"
-export CXXFLAGS=$CFLAGS
+export CXXFLAGS="$CFLAGS"
+# (tpg) Enable RECYCLES_PIDS feature
+export CPPFLAGS="$CPPFLAGS -D_GNU_SOURCE -DRECYCLES_PIDS `getconf LFS_CFLAGS`"
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 %configure2_5x \
@@ -148,7 +151,7 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
     --enable-multibyte \
     --enable-readline \
     --with-installed-readline \
-    --without-gnu-malloc \
+    --with-gnu-malloc \
     --without-bash-malloc \
     --disable-strict-posix-default \
     --enable-select \
@@ -254,10 +257,10 @@ cd ..
 
 install -m 644 doc/bash.info %{buildroot}%{_infodir}/
 
-%find_lang %{name}
+#find_lang %{name}
 
 # merges list
-cat man.pages %{name}.lang > files.list
+cat man.pages > files.list
 
 # install documentation manually in expected place
 install -d -m 755 %{buildroot}%{_docdir}/%{name}
@@ -287,6 +290,7 @@ rm -rf %{buildroot}
 %{_mandir}/man1/builtins.1*
 %{_mandir}/man1/bashbug.1*
 %{_bindir}/bashbug
+%{_localedir}/*/*/*.mo
 
 %files doc
 %defattr(-,root,root)
