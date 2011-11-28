@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.2
-Release:	%mkrel 9
+Release:	%mkrel 10
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -45,6 +45,16 @@ Patch1015:	bash42-008
 Patch1016:	bash42-009
 Patch1017:	bash42-010
 Patch1018:	bash-ru-ua-l10n.patch
+Patch1019:	bash42-011
+Patch1020:	bash42-012
+Patch1021:	bash42-013
+Patch1022:	bash42-014
+Patch1023:	bash42-015
+Patch1024:	bash42-016
+Patch1025:	bash42-017
+Patch1026:	bash42-018
+Patch1027:	bash42-019
+Patch1028:	bash42-020
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
 BuildRequires:	groff
@@ -109,6 +119,16 @@ mv doc/README .
 %patch1017 -p0 -b .010
 # bash-ru-ua-l10n.patch
 %patch1018 -p1 -b .ruua
+%patch1019 -p0 -b .011
+%patch1020 -p0 -b .012
+%patch1021 -p0 -b .013
+%patch1022 -p0 -b .014
+%patch1023 -p0 -b .015
+%patch1024 -p0 -b .016
+%patch1025 -p0 -b .017
+%patch1026 -p0 -b .018
+%patch1027 -p0 -b .019
+%patch1028 -p0 -b .020
 
 echo %{version} > _distribution
 echo %{release} > _patchlevel
