@@ -78,7 +78,7 @@ Patch1047:	bash42-039
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
 BuildRequires:	groff
-BuildRequires:	libtermcap-devel
+BuildRequires:	termcap-devel
 BuildRequires:	texinfo
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
