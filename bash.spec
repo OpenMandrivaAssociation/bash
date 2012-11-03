@@ -55,6 +55,26 @@ Patch1025:	bash42-017
 Patch1026:	bash42-018
 Patch1027:	bash42-019
 Patch1028:	bash42-020
+Patch1029:	bash42-021
+Patch1030:	bash42-022
+Patch1031:	bash42-023
+Patch1032:	bash42-024
+Patch1033:	bash42-025
+Patch1034:	bash42-026
+Patch1035:	bash42-027
+Patch1036:	bash42-028
+Patch1037:	bash42-029
+Patch1038:	bash42-030
+Patch1039:	bash42-031
+Patch1040:	bash42-032
+Patch1041:	bash42-033
+Patch1042:	bash42-034
+Patch1043:	bash42-035
+Patch1044:	bash42-036
+Patch1045:	bash42-037
+Patch1046:	bash42-038
+Patch1047:	bash42-039
+
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
 BuildRequires:	groff
@@ -67,7 +87,6 @@ Obsoletes:	bash3 < 3.2.48
 Provides:	bash3
 # explicit file provides
 Provides:	/bin/sh
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Bash is a GNU project sh-compatible shell or command language
@@ -129,6 +148,25 @@ mv doc/README .
 %patch1026 -p0 -b .018
 %patch1027 -p0 -b .019
 %patch1028 -p0 -b .020
+%patch1029 -p0 -b .021
+%patch1030 -p0 -b .022
+%patch1031 -p0 -b .023
+%patch1032 -p0 -b .024
+%patch1033 -p0 -b .025
+%patch1034 -p0 -b .026
+%patch1035 -p0 -b .027
+%patch1036 -p0 -b .028
+%patch1037 -p0 -b .029
+%patch1038 -p0 -b .030
+%patch1039 -p0 -b .031
+%patch1040 -p0 -b .032
+%patch1041 -p0 -b .033
+%patch1042 -p0 -b .034
+%patch1043 -p0 -b .035
+%patch1044 -p0 -b .036
+%patch1045 -p0 -b .037
+%patch1046 -p0 -b .038
+%patch1047 -p0 -b .039
 
 echo %{version} > _distribution
 echo %{release} > _patchlevel
@@ -168,8 +206,6 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 make check
 
 %install
-rm -rf %{buildroot}
-
 %makeinstall_std
 
 # beurk
@@ -267,11 +303,7 @@ install -m 644 README COMPAT NEWS NOTES POSIX CHANGES \
 cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
     %{buildroot}%{_docdir}/%{name}
 
-%clean
-rm -rf %{buildroot}
-
 %files -f files.list
-%defattr(-,root,root)
 %dir %{_docdir}/%{name}
 %{_docdir}/%{name}/README
 %config(noreplace) %{_sysconfdir}/skel/.b*
@@ -291,6 +323,5 @@ rm -rf %{buildroot}
 %{_localedir}/*/*/*.mo
 
 %files doc
-%defattr(-,root,root)
 %{_docdir}/%{name}/*
 %exclude %{_docdir}/%{name}/README
