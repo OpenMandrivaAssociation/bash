@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.2
-Release:	%mkrel 10
+Release:	11
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
