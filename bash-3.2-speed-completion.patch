@@ -1,0 +1,284 @@
+diff -up bash-3.2/builtins/complete.def.behdad bash-3.2/builtins/complete.def
+--- bash-3.2/builtins/complete.def.behdad	2008-12-08 10:04:13.000000000 -0500
++++ bash-3.2/builtins/complete.def	2008-12-15 17:01:38.000000000 -0500
+@@ -482,7 +482,14 @@ print_one_completion (cmd, cs)
+   PRINTARG (cs->funcname, "-F");
+   PRINTARG (cs->command, "-C");
+ 
+-  printf ("%s\n", cmd);
++  if (*cmd)
++    {
++      x = sh_backslash_quote (cmd);
++      printf ("%s\n ", x);
++      free (x);
++    }
++  else
++    printf ("''\n");
+ 
+   return (0);
+ }
+@@ -587,7 +594,7 @@ compgen_builtin (list)
+   cs->filterpat = STRDUP (Xarg);
+ 
+   rval = EXECUTION_FAILURE;
+-  sl = gen_compspec_completions (cs, "compgen", word, 0, 0);
++  sl = gen_compspec_completions (cs, "compgen", word, 0, 0, 0);
+ 
+   /* If the compspec wants the bash default completions, temporarily
+      turn off programmable completion and call the bash completion code. */
+diff -up bash-3.2/pcomplete.c.behdad bash-3.2/pcomplete.c
+--- bash-3.2/pcomplete.c.behdad	2008-12-08 08:20:46.000000000 -0500
++++ bash-3.2/pcomplete.c	2008-12-15 17:04:41.000000000 -0500
+@@ -119,7 +119,7 @@ static STRINGLIST *gen_globpat_matches _
+ static STRINGLIST *gen_wordlist_matches __P((COMPSPEC *, const char *));
+ static STRINGLIST *gen_shell_function_matches __P((COMPSPEC *, const char *,
+ 						   char *, int, WORD_LIST *,
+-						   int, int));
++						   int, int, int *));
+ static STRINGLIST *gen_command_matches __P((COMPSPEC *, const char *, char *,
+ 					    int, WORD_LIST *, int, int));
+ 
+@@ -977,24 +977,28 @@ build_arg_list (cmd, text, lwords, ind)
+    variable, this does nothing if arrays are not compiled into the shell. */
+ 
+ static STRINGLIST *
+-gen_shell_function_matches (cs, text, line, ind, lwords, nw, cw)
++gen_shell_function_matches (cs, text, line, ind, lwords, nw, cw, foundp)
+      COMPSPEC *cs;
+      const char *text;
+      char *line;
+      int ind;
+      WORD_LIST *lwords;
+-     int nw, cw;
++     int nw, cw, *foundp;
+ {
+   char *funcname;
+   STRINGLIST *sl;
+   SHELL_VAR *f, *v;
+   WORD_LIST *cmdlist;
+-  int fval;
++  int fval, found;
+   sh_parser_state_t ps;
+ #if defined (ARRAY_VARS)
+   ARRAY *a;
+ #endif
+ 
++  found = 0;
++  if (foundp)
++    *foundp = found;
++
+   funcname = cs->funcname;
+   f = find_function (funcname);
+   if (f == 0)
+@@ -1019,6 +1023,10 @@ gen_shell_function_matches (cs, text, li
+   fval = execute_shell_function (f, cmdlist);  
+   restore_parser_state (&ps);
+ 
++  found = fval != 127;
++  if (foundp)
++    *foundp = found;
++
+   /* Now clean up and destroy everything. */
+   dispose_words (cmdlist);
+   unbind_compfunc_variables (0);
+@@ -1033,7 +1041,7 @@ gen_shell_function_matches (cs, text, li
+   VUNSETATTR (v, att_invisible);
+ 
+   a = array_cell (v);
+-  if (a == 0 || array_empty (a))
++  if (found == 0 || a == 0 || array_empty (a))
+     sl = (STRINGLIST *)NULL;
+   else
+     {
+@@ -1154,20 +1162,24 @@ command_line_to_word_list (line, llen, s
+   return (ret);
+ }
+ 
+-/* Evaluate COMPSPEC *cs and return all matches for WORD. */
++/* Evaluate COMPSPEC *cs and return all matches for WORD. 
++   Sets *foundp to 1 if found, to 0 otherwise. */
+ 
+ STRINGLIST *
+-gen_compspec_completions (cs, cmd, word, start, end)
++gen_compspec_completions (cs, cmd, word, start, end, foundp)
+      COMPSPEC *cs;
+      const char *cmd;
+      const char *word;
+-     int start, end;
++     int start, end, *foundp;
+ {
+   STRINGLIST *ret, *tmatches;
+   char *line;
+   int llen, nw, cw;
+   WORD_LIST *lwords;
+   COMPSPEC *tcs;
++  int found;
++
++  found = 1;
+ 
+ #ifdef DEBUG
+   debug_printf ("gen_compspec_completions (%s, %s, %d, %d)", cmd, word, start, end);
+@@ -1253,7 +1265,10 @@ gen_compspec_completions (cs, cmd, word,
+ 
+   if (cs->funcname)
+     {
+-      tmatches = gen_shell_function_matches (cs, word, line, rl_point - start, lwords, nw, cw);
++      int foundf = 0;
++      tmatches = gen_shell_function_matches (cs, word, line, rl_point - start, lwords, nw, cw, &foundf);
++      if (!foundf)
++        found = 0;
+       if (tmatches)
+ 	{
+ #ifdef DEBUG
+@@ -1294,6 +1309,14 @@ gen_compspec_completions (cs, cmd, word,
+       FREE (line);
+     }
+ 
++  if (foundp)
++    *foundp = found;
++  if (found == 0)
++    {
++      strlist_dispose (ret);
++      return NULL;
++    }
++
+   if (cs->filterpat)
+     {
+       tmatches = filter_stringlist (ret, cs->filterpat, word);
+@@ -1340,6 +1363,51 @@ gen_compspec_completions (cs, cmd, word,
+   return (ret);
+ }
+ 
++/* Searches programmable completions for search_cmd, and if found, returns
++ * a list of matches. */
++static STRINGLIST *
++gen_progcomp_completions (search_cmd, cmd, word, start, end, foundp, retryp, cs_save)
++     const char *search_cmd;
++     const char *cmd;
++     const char *word;
++     int start, end, *foundp, *retryp;
++     COMPSPEC **cs_save;
++{
++  COMPSPEC *cs;
++  STRINGLIST *ret;
++
++  cs = progcomp_search (search_cmd);
++
++  if (cs == 0 || cs == *cs_save)
++    return NULL;
++
++  /* Dispose the old COMPSPEC and remember the new one for future reference. */
++  if (*cs_save)
++    compspec_dispose (*cs_save);
++  cs->refcount++;
++  *cs_save = cs;
++
++  cs = compspec_copy (cs);
++
++  ret = gen_compspec_completions (cs, cmd, word, start, end, foundp);
++
++  if (*foundp)
++    {
++      /* Signal the caller that we found matches for this command, and pass
++	 back any meta-options associated with the compspec. */
++      *foundp |= cs->options;
++    }
++  else
++    {
++      /* The function requested a "retry". */
++      *retryp = 1;
++    }
++
++  compspec_dispose (cs);
++
++  return ret;
++}
++
+ /* The driver function for the programmable completion code.  Returns a list
+    of matches for WORD, which is an argument to command CMD.  START and END
+    bound the command currently being completed in rl_line_buffer. */
+@@ -1349,36 +1417,34 @@ programmable_completions (cmd, word, sta
+      const char *word;
+      int start, end, *foundp;
+ {
+-  COMPSPEC *cs;
+   STRINGLIST *ret;
++  COMPSPEC *cs1, *cs2, *cs3;
+   char **rmatches, *t;
++  int found;
++  int retry;
++
++  cs1 = cs2 = cs3 = 0;
++
++  found = 0;
++
++retry:
++  retry = 0;
+ 
+   /* We look at the basename of CMD if the full command does not have
+      an associated COMPSPEC. */
+-  cs = progcomp_search (cmd);
+-  if (cs == 0)
++  ret = gen_progcomp_completions (cmd, cmd, word, start, end, &found, &retry, &cs1);
++  if (found == 0)
+     {
+       t = strrchr (cmd, '/');
+-      if (t)
+-	cs = progcomp_search (++t);
+-    }
+-  if (cs == 0)
+-    {
+-      if (foundp)
+-	*foundp = 0;
+-      return ((char **)NULL);
++      if (t && *(++t))
++	ret = gen_progcomp_completions (t, cmd, word, start, end, &found, &retry, &cs2);
+     }
++  /* Check if there's a catch-all COMPSPEC installed. */
++  if (found == 0)
++    ret = gen_progcomp_completions ("", cmd, word, start, end, &found, &retry, &cs3);
+ 
+-  cs = compspec_copy (cs);
+-
+-  /* Signal the caller that we found a COMPSPEC for this command, and pass
+-     back any meta-options associated with the compspec. */
+-  if (foundp)
+-    *foundp = 1|cs->options;
+-
+-  ret = gen_compspec_completions (cs, cmd, word, start, end);
+-
+-  compspec_dispose (cs);
++  if (found == 0 && retry)
++    goto retry;
+ 
+   if (ret)
+     {
+@@ -1388,6 +1454,16 @@ programmable_completions (cmd, word, sta
+   else
+     rmatches = (char **)NULL;
+ 
++  if (foundp)
++    *foundp = found;
++
++  if (cs1) 
++    compspec_dispose (cs1);
++  if (cs2) 
++    compspec_dispose (cs2);
++  if (cs3) 
++    compspec_dispose (cs3);
++
+   return (rmatches);
+ }
+ 
+diff -up bash-3.2/pcomplete.h.behdad bash-3.2/pcomplete.h
+--- bash-3.2/pcomplete.h.behdad	2008-12-08 10:04:37.000000000 -0500
++++ bash-3.2/pcomplete.h	2008-12-08 10:04:39.000000000 -0500
+@@ -147,7 +147,7 @@ extern void set_itemlist_dirty __P((ITEM
+ 
+ extern STRINGLIST *completions_to_stringlist __P((char **));
+ 
+-extern STRINGLIST *gen_compspec_completions __P((COMPSPEC *, const char *, const char *, int, int));
++extern STRINGLIST *gen_compspec_completions __P((COMPSPEC *, const char *, const char *, int, int, int *));
+ extern char **programmable_completions __P((const char *, const char *, int, int, int *));
+ 
+ #endif /* _PCOMPLETE_H_ */

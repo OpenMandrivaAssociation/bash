@@ -1,0 +1,10 @@
+sources:
+  "alias.sh:"	988bb863a8c63472e81ce8709d9a7a766203f4f7
+  "bash-4.2.tar.gz:"	487840ab7134eb7901fbb2e49b0ee3d22de15cb8
+  "bash-4.2.tar.gz.sig:"	da39a3ee5e6b4b0d3255bfef95601890afd80709
+  "bash-doc-3.2.tar.bz2:"	29ad9fa5f0071976ab0f4c6ba3bda7c276324113
+  "bashrc:"	4a434073d5a4f9685f1fe180380674119c0dedf1
+  "dot-bash_logout:"	091d38c25c8fb9b6fb272439a33895a6e440cdf0
+  "dot-bash_profile:"	d37466f611577d1e48f92a2a5363b54257092499
+  "dot-bashrc:"	09494d68295c788c71758e743f4f97c76381f2c2
+  "profile.d-bash:"	1e666d450bfd8a6989c4917a67a89d33b4422aaa
