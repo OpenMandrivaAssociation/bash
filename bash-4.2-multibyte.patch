@@ -1,0 +1,87 @@
+--- bash-4.2/lib/sh/strtrans.c.orig	2012-08-06 17:37:02.478363913 +0400
++++ bash-4.2/lib/sh/strtrans.c	2012-08-06 17:45:29.647803781 +0400
+@@ -212,6 +212,11 @@
+   if (str == 0 || *str == 0)
+     return ((char *)0);
+ 
++#if defined (HANDLE_MULTIBYTE)
++  wchar_t wcc;
++  size_t wc_len;
++#endif
++
+   l = strlen (str);
+   rsize = 4 * l + 4;
+   r = ret = (char *)xmalloc (rsize);
+@@ -222,6 +227,9 @@
+   for (s = str, l = 0; *s; s++)
+     {
+       c = *s;
++#if defined (HANDLE_MULTIBYTE)
++      wc_len = 1;
++#endif
+       l = 1;		/* 1 == add backslash; 0 == no backslash */
+       switch (c)
+ 	{
+@@ -243,7 +251,12 @@
+ 	case '\'':
+ 	  break;
+ 	default:
+-	  if (ISPRINT (c) == 0)
++#if defined (HANDLE_MULTIBYTE)
++          wc_len = mbrtowc(&wcc, s, MB_CUR_MAX, NULL);
++          if ((int)wc_len < 0 || iswprint(wcc) == 0)
++#else
++          if (ISPRINT (c) == 0)
++#endif
+ 	    {
+ 	      *r++ = '\\';
+ 	      *r++ = TOCHAR ((c >> 6) & 07);
+@@ -256,7 +269,12 @@
+ 	}
+       if (l)
+ 	*r++ = '\\';
++#if defined (HANDLE_MULTIBYTE)
++      for (; (int)wc_len > 0; wc_len--, c = wc_len ? *++s : c)
++          *r++ = c;
++#else
+       *r++ = c;
++#endif
+     }
+ 
+   *r++ = '\'';
+@@ -277,10 +295,34 @@
+   if (string == 0)
+     return 0;
+ 
++#if defined (HANDLE_MULTIBYTE)
++  const wchar_t *wcs;
++  wchar_t wcc;
++
++  wchar_t *wcstr = NULL;
++  size_t wclen, slen;
++
++ 
++  slen = mbstowcs (wcstr, string, 0);
++ 
++  if (slen == -1)
++    slen = 0;
++  wcstr = (wchar_t *)xmalloc (sizeof (wchar_t) * (slen + 1));
++  mbstowcs (wcstr, string, slen + 1);
++
++  
++  for (wcs = wcstr; wcc = *wcs; wcs++)
++    if (iswprint(wcc) == 0)
++      {
++        free (wcstr);
++        return 1;
++      }
++  free (wcstr);
++#else
+   for (s = string; c = *s; s++)
+     if (ISPRINT (c) == 0)
+       return 1;
+-
++#endif
+   return 0;
+ }
+ 

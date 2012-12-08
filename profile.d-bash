@@ -1,0 +1,21 @@
+# Special nice features for bash
+
+if [ "$PS1" ]  && [ -n "$BASH" ]; then
+    # automatically save the history after each command
+    PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
+    # do not save several time the same command in a row
+    # HISTCONTROL=ignoredups
+
+    if [ "$HISTCONTROL" = "ignorespace" ] ; then
+        export HISTCONTROL=ignoreboth
+    else
+        export HISTCONTROL=ignoredups
+    fi
+
+    # automatically correct the info on window size
+    # do not do autocompletion on empty line
+    # allow mixing history when several shells running in parallel
+    # automatically fix the hash table of known commands
+    shopt -s checkwinsize no_empty_cmd_completion histappend checkhash 
+fi
