@@ -3,7 +3,7 @@
 Name:		bash
 Version:	4.2
 %define subrel 2
-Release:	%mkrel 11
+Release:	12
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -205,8 +205,6 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 make check
 
 %install
-rm -rf %{buildroot}
-
 %makeinstall_std
 
 # beurk
@@ -304,11 +302,7 @@ install -m 644 README COMPAT NEWS NOTES POSIX CHANGES \
 cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
     %{buildroot}%{_docdir}/%{name}
 
-%clean
-rm -rf %{buildroot}
-
 %files -f files.list
-%defattr(-,root,root)
 %dir %{_docdir}/%{name}
 %{_docdir}/%{name}/README
 %config(noreplace) %{_sysconfdir}/skel/.b*
