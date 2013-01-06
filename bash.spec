@@ -53,6 +53,11 @@ Patch34:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-034
 Patch35:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-035
 Patch36:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-036
 Patch37:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-037
+Patch38:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-038
+Patch39:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-039
+Patch40:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-040
+Patch41:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-041
+Patch42:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-042
 
 
 Patch200: 	bash-4.2-multibyte.patch
@@ -150,6 +155,11 @@ mv doc/README .
 %patch35 -p0
 %patch36 -p0
 %patch37 -p0
+%patch38 -p0
+%patch39 -p0
+%patch40 -p0
+%patch41 -p0
+%patch42 -p0
 
 %patch200 -p1
 
@@ -327,6 +337,7 @@ cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
 
 %changelog
 * Sun Jan  6 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 4.2-13
+- update to patchlevel 42
 - build against libncursesw rather than libtermcap
 
 * Wed Aug 22 2012 Danila Leontiev <danila.leontiev@rosalab.ru> 4.2-11.2
