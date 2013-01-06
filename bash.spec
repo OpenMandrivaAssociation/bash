@@ -2,8 +2,7 @@
 
 Name:		bash
 Version:	4.2
-%define subrel 2
-Release:	12
+Release:	13
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -77,7 +76,7 @@ Patch1010:	bash-ru-ua-l10n.patch
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
 BuildRequires:	groff
-BuildRequires:	termcap-devel
+BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	texinfo
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
@@ -327,6 +326,9 @@ cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
 
 
 %changelog
+* Sun Jan  6 2013 Per Øyvind Karlsen <peroyvind@mandriva.org> 4.2-13
+- build against libncursesw rather than libtermcap
+
 * Wed Aug 22 2012 Danila Leontiev <danila.leontiev@rosalab.ru> 4.2-11.2
 - Updated release version
 
