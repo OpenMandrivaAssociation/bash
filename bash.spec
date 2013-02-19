@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.2
-Release:	13
+Release:	14
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -186,6 +186,10 @@ sed -i -e s/mdk// _patchlevel
 export CFLAGS="%{optflags} -Os"
 export CXXFLAGS=$CFLAGS
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
+
+# Drag in support for aarch64-* and the likes
+cp -a %_datadir/libtool/config/* .
+cp -a %_datadir/libtool/config/* support/
 
 %configure2_5x \
     --enable-command-timing \
