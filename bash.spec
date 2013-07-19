@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.2
-Release:	15
+Release:	16
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -58,7 +58,9 @@ Patch39:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-039
 Patch40:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-040
 Patch41:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-041
 Patch42:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-042
-
+Patch43:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-043
+Patch44:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-044
+Patch45:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-045
 
 Patch200: 	bash-4.2-multibyte.patch
 Patch1000:	bash-2.02-security.patch
@@ -87,7 +89,7 @@ Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
 Conflicts:	setup < 2.7.4-1mdv
 Obsoletes:	bash3 < 3.2.48
-Provides:	bash3
+Provides:	bash3 = %{version}
 # explicit file provides
 Provides:	/bin/sh
 
@@ -160,6 +162,9 @@ mv doc/README .
 %patch40 -p0
 %patch41 -p0
 %patch42 -p0
+%patch43 -p0
+%patch44 -p0
+%patch45 -p0
 
 %patch200 -p1
 

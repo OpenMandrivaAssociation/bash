@@ -1,3 +1,4 @@
+---
 sources:
-  "bash-4.2.tar.gz": 487840ab7134eb7901fbb2e49b0ee3d22de15cb8
-  "bash-doc-3.2.tar.bz2": 29ad9fa5f0071976ab0f4c6ba3bda7c276324113
+  bash-4.2.tar.gz: 487840ab7134eb7901fbb2e49b0ee3d22de15cb8
+  bash-doc-3.2.tar.bz2: 29ad9fa5f0071976ab0f4c6ba3bda7c276324113
