@@ -261,7 +261,9 @@ s/,//g
 b
 }
 d
-' builtins.1 > man.pages
+' builtins.1 | tr ' ' '\n' | grep -v -E '^(printf|export|echo|pwd|test|kill)$' > man.pages
+# tr is needed because there are few commands in a row separated with a whilespace
+# tr is needed because there are few commands in a row separated with a whilespace
 install -m 644 builtins.1 %{buildroot}%{_mandir}/man1/builtins.1
 
 install -m 644 rbash.1 %{buildroot}%{_mandir}/man1/rbash.1
@@ -279,8 +281,6 @@ s:^:%{_mandir}/man1/:
 s/$/.1%{_extension}/
 ' > ../man.pages
 
-perl -p -i -e 's!.*/(printf|export|echo|false|pwd|test|true|kill).1%{_extension}!!' ../man.pages
-
 mkdir -p %{buildroot}%{_sysconfdir}/skel
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 install -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/skel/.bashrc
@@ -291,9 +291,6 @@ install -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/bashrc
 install -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/profile.d/95bash-extras.sh
 
 ln -s bash %{buildroot}/bin/rbash
-
-# These're provided by other packages
-rm -f %{buildroot}{%{_infodir}/dir,%{_mandir}/man1/{echo,export,false,kill,printf,pwd,test,true}.1}
 
 install -m 644 bash.info %{buildroot}%{_infodir}
 )
