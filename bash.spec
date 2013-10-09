@@ -240,7 +240,6 @@ rmdir tmp_doc
 mkdir -p %{buildroot}/bin
 pushd %{buildroot} && mv usr/bin/bash bin/bash && popd
 pushd %{buildroot}/bin && ln -s bash sh && popd
-pushd %{buildroot}/bin && ln -sf bash bash3 && popd
 
 # make builtins.1 and rbash.1 with bash.1 in place (fix mdv#51379)
 pushd doc
@@ -323,7 +322,6 @@ cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
 %config(noreplace) %{_sysconfdir}/bashrc
 /bin/rbash
 /bin/bash
-/bin/bash3
 /bin/sh
 %{_infodir}/bash.info*
 %{_mandir}/man1/bash.1*
