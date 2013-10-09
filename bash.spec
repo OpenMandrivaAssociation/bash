@@ -261,7 +261,7 @@ s/,//g
 b
 }
 d
-' builtins.1 | tr ' ' '\n' | grep -v -E '^(printf|export|echo|pwd|test|kill)$' > man.pages
+' builtins.1 | tr -s ' ' '\n' | grep -v -E '^(printf|export|echo|pwd|test|kill)$' > man.pages
 # tr is needed because there are few commands in a row separated with a whilespace
 # tr is needed because there are few commands in a row separated with a whilespace
 install -m 644 builtins.1 %{buildroot}%{_mandir}/man1/builtins.1
@@ -269,10 +269,11 @@ install -m 644 builtins.1 %{buildroot}%{_mandir}/man1/builtins.1
 install -m 644 rbash.1 %{buildroot}%{_mandir}/man1/rbash.1
 
 for i in `cat man.pages` ; do
-  echo .so man1/builtins.1 > %{buildroot}%{_mandir}/man1/$i.1
+# install man-page
+	echo .so man1/builtins.1 > %{buildroot}%{_mandir}/man1/$i.1
+# now turn man.page into a filelist for the man subpackage
+	echo "%{_mandir}/man1/$i.1%{_extension}" >> ../man.pages.filelist
 done
-
-# now turn man.pages into a filelist for the man subpackage
 
 cat man.pages |tr -s ' ' '\n' |sed '
 1i\
@@ -298,7 +299,7 @@ install -m 644 bash.info %{buildroot}%{_infodir}
 %find_lang %{name}
 
 # merges list
-cat man.pages %{name}.lang > files.list
+cat man.pages.filelist %{name}.lang > files.list
 
 # install documentation manually in expected place
 install -d -m 755 %{buildroot}%{_docdir}/%{name}
