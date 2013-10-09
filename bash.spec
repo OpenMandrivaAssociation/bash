@@ -88,8 +88,6 @@ BuildRequires:	texinfo
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
 Conflicts:	setup < 2.7.4-1mdv
-Obsoletes:	bash3 < 3.2.48
-Provides:	bash3 = %{version}
 # explicit file provides
 Provides:	/bin/sh
 
