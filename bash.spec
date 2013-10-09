@@ -182,10 +182,6 @@ mv doc/README .
 # bash-ru-ua-l10n.patch
 %patch1010 -p1 -b .ruua
 
-echo %{version} > _distribution
-echo %{release} > _patchlevel
-sed -i -e s/mdk// _patchlevel
-
 %build
 
 export CFLAGS="%{optflags} -Os"
