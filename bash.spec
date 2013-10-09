@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.2
-Release:	17
+Release:	18
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -261,8 +261,7 @@ s/,//g
 b
 }
 d
-' builtins.1 | tr -s ' ' '\n' | grep -v -E '^(printf|export|echo|pwd|test|kill)$' > man.pages
-# tr is needed because there are few commands in a row separated with a whilespace
+' builtins.1 | tr -s ' ' '\n' | grep -v -E '^(printf|export|echo|pwd|test|true|kill)$' > man.pages
 # tr is needed because there are few commands in a row separated with a whilespace
 install -m 644 builtins.1 %{buildroot}%{_mandir}/man1/builtins.1
 
