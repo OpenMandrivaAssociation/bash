@@ -236,11 +236,11 @@ for i in `/bin/ls doc/` ; \
 rmdir tmp_doc
 
 mkdir -p %{buildroot}/bin
-pushd %{buildroot} && mv usr/bin/bash bin/bash && popd
-pushd %{buildroot}/bin && ln -s bash sh && popd
+( cd %{buildroot} && mv usr/bin/bash bin/bash )
+( cd %{buildroot}/bin && ln -s bash sh )
 
 # make builtins.1 and rbash.1 with bash.1 in place (fix mdv#51379)
-pushd doc
+(cd doc
 mkdir tmp_fix_so
 cd tmp_fix_so
 cp ../builtins.1 ../rbash.1 .
@@ -248,10 +248,10 @@ sed -e '/^.if \\n(zZ=1 .ig zZ/,/^.zZ/d' ../bash.1 > bash.1
 soelim builtins.1 > ../builtins.1
 sed -e '/^.if \\n(zY=1 .ig zY/,/^.zY/d' ../bash.1 > bash.1
 soelim rbash.1    > ../rbash.1
-popd
+)
 
 # make manpages for bash builtins as per suggestion in DOC/README
-cd doc
+(cd doc
 sed -e '
 /^\.SH NAME/, /\\- bash built-in commands, see \\fBbash\\fR(1)$/{
 /^\.SH NAME/d
@@ -295,9 +295,8 @@ ln -s bash %{buildroot}/bin/rbash
 # These're provided by other packages
 rm -f %{buildroot}{%{_infodir}/dir,%{_mandir}/man1/{echo,export,false,kill,printf,pwd,test,true}.1}
 
-cd ..
-
-install -m 644 doc/bash.info %{buildroot}%{_infodir}/
+install -m 644 bash.info %{buildroot}%{_infodir}
+)
 
 %find_lang %{name}
 
