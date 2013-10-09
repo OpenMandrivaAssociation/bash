@@ -83,7 +83,7 @@ Patch1010:	bash-ru-ua-l10n.patch
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
 BuildRequires:	groff
-BuildRequires:	pkgconfig(tinfo)
+BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	texinfo
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
