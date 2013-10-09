@@ -183,9 +183,7 @@ mv doc/README .
 %patch1010 -p1 -b .ruua
 
 %build
-
-export CFLAGS="%{optflags} -Os"
-export CXXFLAGS=$CFLAGS
+%global optflags %{optflags} -Os
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 # Drag in support for aarch64-* and the likes
