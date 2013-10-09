@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.2
-Release:	16
+Release:	17
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -88,8 +88,6 @@ BuildRequires:	texinfo
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
 Conflicts:	setup < 2.7.4-1mdv
-Obsoletes:	bash3 < 3.2.48
-Provides:	bash3 = %{version}
 # explicit file provides
 Provides:	/bin/sh
 
@@ -182,14 +180,8 @@ mv doc/README .
 # bash-ru-ua-l10n.patch
 %patch1010 -p1 -b .ruua
 
-echo %{version} > _distribution
-echo %{release} > _patchlevel
-sed -i -e s/mdk// _patchlevel
-
 %build
-
-export CFLAGS="%{optflags} -Os"
-export CXXFLAGS=$CFLAGS
+%global optflags %{optflags} -Os
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 # Drag in support for aarch64-* and the likes
@@ -244,12 +236,11 @@ for i in `/bin/ls doc/` ; \
 rmdir tmp_doc
 
 mkdir -p %{buildroot}/bin
-pushd %{buildroot} && mv usr/bin/bash bin/bash && popd
-pushd %{buildroot}/bin && ln -s bash sh && popd
-pushd %{buildroot}/bin && ln -sf bash bash3 && popd
+( cd %{buildroot} && mv usr/bin/bash bin/bash )
+( cd %{buildroot}/bin && ln -s bash sh )
 
 # make builtins.1 and rbash.1 with bash.1 in place (fix mdv#51379)
-pushd doc
+(cd doc
 mkdir tmp_fix_so
 cd tmp_fix_so
 cp ../builtins.1 ../rbash.1 .
@@ -257,10 +248,10 @@ sed -e '/^.if \\n(zZ=1 .ig zZ/,/^.zZ/d' ../bash.1 > bash.1
 soelim builtins.1 > ../builtins.1
 sed -e '/^.if \\n(zY=1 .ig zY/,/^.zY/d' ../bash.1 > bash.1
 soelim rbash.1    > ../rbash.1
-popd
+)
 
 # make manpages for bash builtins as per suggestion in DOC/README
-cd doc
+(cd doc
 sed -e '
 /^\.SH NAME/, /\\- bash built-in commands, see \\fBbash\\fR(1)$/{
 /^\.SH NAME/d
@@ -270,16 +261,19 @@ s/,//g
 b
 }
 d
-' builtins.1 > man.pages
+' builtins.1 | tr -s ' ' '\n' | grep -v -E '^(printf|export|echo|pwd|test|kill)$' > man.pages
+# tr is needed because there are few commands in a row separated with a whilespace
+# tr is needed because there are few commands in a row separated with a whilespace
 install -m 644 builtins.1 %{buildroot}%{_mandir}/man1/builtins.1
 
 install -m 644 rbash.1 %{buildroot}%{_mandir}/man1/rbash.1
 
 for i in `cat man.pages` ; do
-  echo .so man1/builtins.1 > %{buildroot}%{_mandir}/man1/$i.1
+# install man-page
+	echo .so man1/builtins.1 > %{buildroot}%{_mandir}/man1/$i.1
+# now turn man.page into a filelist for the man subpackage
+	echo "%{_mandir}/man1/$i.1%{_extension}" >> ../man.pages.filelist
 done
-
-# now turn man.pages into a filelist for the man subpackage
 
 cat man.pages |tr -s ' ' '\n' |sed '
 1i\
@@ -287,8 +281,6 @@ cat man.pages |tr -s ' ' '\n' |sed '
 s:^:%{_mandir}/man1/:
 s/$/.1%{_extension}/
 ' > ../man.pages
-
-perl -p -i -e 's!.*/(printf|export|echo|false|pwd|test|true|kill).1%{_extension}!!' ../man.pages
 
 mkdir -p %{buildroot}%{_sysconfdir}/skel
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
@@ -301,17 +293,13 @@ install -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/profile.d/95bash-extras.sh
 
 ln -s bash %{buildroot}/bin/rbash
 
-# These're provided by other packages
-rm -f %{buildroot}{%{_infodir}/dir,%{_mandir}/man1/{echo,export,false,kill,printf,pwd,test,true}.1}
-
-cd ..
-
-install -m 644 doc/bash.info %{buildroot}%{_infodir}/
+install -m 644 bash.info %{buildroot}%{_infodir}
+)
 
 %find_lang %{name}
 
 # merges list
-cat man.pages %{name}.lang > files.list
+cat man.pages.filelist %{name}.lang > files.list
 
 # install documentation manually in expected place
 install -d -m 755 %{buildroot}%{_docdir}/%{name}
@@ -329,7 +317,6 @@ cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
 %config(noreplace) %{_sysconfdir}/bashrc
 /bin/rbash
 /bin/bash
-/bin/bash3
 /bin/sh
 %{_infodir}/bash.info*
 %{_mandir}/man1/bash.1*
