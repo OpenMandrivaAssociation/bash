@@ -1,0 +1,11 @@
+--- bash-4.3/parse.y.extended_quote	2014-03-03 02:38:42.353339171 +0100
++++ bash-4.3/parse.y	2014-03-03 02:39:13.796565916 +0100
+@@ -3435,7 +3435,7 @@ parse_matched_pair (qc, open, close, len
+ 		      free (ttrans);
+ 		      nestlen = strlen (nestret);
+ 		    }
+-		  else if ((rflags & P_DQUOTE) == 0)
++		  else if (extended_quote || (rflags & P_DQUOTE) == 0)
+ 		    {
+ 		      nestret = sh_single_quote (ttrans);
+ 		      free (ttrans);

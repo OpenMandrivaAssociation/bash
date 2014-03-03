@@ -1,8 +1,8 @@
 %define i18ndate 20010626
 
 Name:		bash
-Version:	4.2
-Release:	23
+Version:	4.3
+Release:	1
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -16,67 +16,18 @@ Source5:	dot-bash_logout
 Source6:	alias.sh
 Source7:	bashrc
 Source8:	profile.d-bash
-Patch1:		ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-001
-Patch2:		ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-002
-Patch3:		ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-003
-Patch4:		ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-004
-Patch5:		ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-005
-Patch6:		ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-006
-Patch7:		ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-007
-Patch8:		ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-008
-Patch9:		ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-009
-Patch10:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-010
-Patch11:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-011
-Patch12:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-012
-Patch13:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-013
-Patch14:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-014
-Patch15:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-015
-Patch16:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-016
-Patch17:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-017
-Patch18:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-018
-Patch19:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-019
-Patch20:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-020
-Patch21:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-021
-Patch22:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-022
-Patch23:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-023
-Patch24:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-024
-Patch25:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-025
-Patch26:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-026
-Patch27:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-027
-Patch28:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-028
-Patch29:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-029
-Patch30:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-030
-Patch31:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-031
-Patch32:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-032
-Patch33:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-033
-Patch34:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-034
-Patch35:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-035
-Patch36:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-036
-Patch37:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-037
-Patch38:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-038
-Patch39:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-039
-Patch40:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-040
-Patch41:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-041
-Patch42:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-042
-Patch43:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-043
-Patch44:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-044
-Patch45:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-045
 
-Patch200: 	bash-4.2-multibyte.patch
 Patch1000:	bash-2.02-security.patch
 # ensure profile is read (Redhat)
 Patch1001:	bash-4.0-profile.patch
 Patch1002:	bash-2.05b-readlinefixes.patch
 Patch1003:	bash-2.04-compat.patch
 #https://bugzilla.novell.com/attachment.cgi?id=67684
-Patch1004:	bash-3.1-extended_quote.patch
+Patch1004:	bash-4.3-extended_quote.patch
 # Official upstream patches
 # none
 Patch1005:	bash-strcoll-bug.diff
-Patch1006:	bash-2.05b-checkwinsize.patch
 Patch1007:	bash-3.2-lzma-copmpletion.patch
-# (fc) 3.2-12mdv fix format string
-Patch1008:	bash-3.2-format-security.patch
 # (proyvind): 4.2-5 add --rpm-requires option (Fedora) (mdvbz#61712)
 Patch1009:	bash-requires.patch
 Patch1010:	bash-ru-ua-l10n.patch
@@ -118,67 +69,20 @@ This package provides documentation for GNU Bourne Again shell (bash).
 %setup -q -a 2
 mv doc/README .
 
-%patch1 -p0
-%patch2 -p0
-%patch3 -p0
-%patch4 -p0
-%patch5 -p0
-%patch6 -p0
-%patch7 -p0
-%patch8 -p0
-%patch9 -p0
-%patch10 -p0
-%patch11 -p0
-%patch12 -p0
-%patch13 -p0
-%patch14 -p0
-%patch15 -p0
-%patch16 -p0
-%patch17 -p0
-%patch18 -p0
-%patch19 -p0
-%patch20 -p0
-%patch21 -p0
-%patch22 -p0
-%patch23 -p0
-%patch24 -p0
-%patch25 -p0
-%patch26 -p0
-%patch27 -p0
-%patch28 -p0
-%patch29 -p0
-%patch30 -p0
-%patch31 -p0
-%patch32 -p0
-%patch33 -p0
-%patch34 -p0
-%patch35 -p0
-%patch36 -p0
-%patch37 -p0
-%patch38 -p0
-%patch39 -p0
-%patch40 -p0
-%patch41 -p0
-%patch42 -p0
-%patch43 -p0
-%patch44 -p0
-%patch45 -p0
-
-%patch200 -p1
-
 %patch1000 -p1 -b .security
 %patch1001 -p1 -b .profile
 # 20060126 warly obsolete exept maybe for the replacement of @ by kH, this will have to be checked
 #%patch1002 -p1 -b .readline
 %patch1003 -p1 -b .compat
-%patch1004 -p0 -b .extended_quote
+%patch1004 -p1 -b .extended_quote
 %patch1005 -p1 -b .strcoll_bugx
-%patch1006 -p1 -b .checkwinsize
 %patch1007 -p1 -b .lzma
-%patch1008 -p1 -b .format-security
 %patch1009 -p1 -b .requires~
 # bash-ru-ua-l10n.patch
-%patch1010 -p1 -b .ruua
+# Needs porting to 4.3
+#patch1010 -p1 -b .ruua
+
+sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
 %build
 %global optflags %{optflags} -Os
