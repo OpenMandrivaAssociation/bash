@@ -2,7 +2,7 @@
 
 Name:		bash
 Version:	4.3
-Release:	1
+Release:	2
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
