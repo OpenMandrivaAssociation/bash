@@ -85,7 +85,7 @@ mv doc/README .
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
 %build
-%global optflags %{optflags} -Os
+%global optflags %{optflags} -Oz
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 # Drag in support for aarch64-* and the likes
