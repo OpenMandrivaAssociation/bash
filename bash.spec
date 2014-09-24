@@ -1,8 +1,9 @@
 %define i18ndate 20010626
+%define patchlevel 25
 
 Name:		bash
 Version:	4.3
-Release:	4
+Release:	5
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -16,6 +17,9 @@ Source5:	dot-bash_logout
 Source6:	alias.sh
 Source7:	bashrc
 Source8:	profile.d-bash
+
+# Upstream patches
+%(for i in `seq 1 %{patchlevel}`; do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{version}-patches/bash`echo %{version} |sed -e 's,\\.,,g'`-`echo 000$i |rev |cut -b1-3 |rev`; done)
 
 Patch1000:	bash-2.02-security.patch
 # ensure profile is read (Redhat)
@@ -68,6 +72,9 @@ This package provides documentation for GNU Bourne Again shell (bash).
 %prep
 %setup -q -a 2
 mv doc/README .
+
+# Upstream patches
+%(for i in `seq 1 %{patchlevel}`; do echo %%patch$i -p0; done)
 
 %patch1000 -p1 -b .security
 %patch1001 -p1 -b .profile
