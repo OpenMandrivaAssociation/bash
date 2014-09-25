@@ -61,6 +61,9 @@ Patch42:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-042
 Patch43:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-043
 Patch44:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-044
 Patch45:	ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-045
+Patch46:        ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-046
+Patch47:        ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-047
+Patch48:        ftp://ftp.gnu.org/gnu/bash/bash-%{version}-patches/bash42-048
 
 Patch200: 	bash-4.2-multibyte.patch
 Patch1000:	bash-2.02-security.patch
@@ -163,6 +166,9 @@ mv doc/README .
 %patch43 -p0
 %patch44 -p0
 %patch45 -p0
+%patch46 -p0
+%patch47 -p0
+%patch48 -p0
 
 %patch200 -p1
 
