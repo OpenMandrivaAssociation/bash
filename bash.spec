@@ -1,9 +1,9 @@
 %define i18ndate 20010626
-%define patchlevel 27
+%define patchlevel 29
 
 Name:		bash
 Version:	4.3
-Release:	6
+Release:	7
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
