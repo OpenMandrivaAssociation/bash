@@ -1,14 +1,15 @@
 %define i18ndate 20010626
 %define patchlevel 30
+%define major 4.3
 
 Name:		bash
-Version:	4.3
-Release:	8
+Version:	%{major}.%{patchlevel}
+Release:	1
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
-Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{version}.tar.gz
+Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 Source1:	%{SOURCE0}.sig
 Source2:	ftp://ftp.gnu.org/pub/gnu/bash/bash-doc-3.2.tar.bz2
 Source3:	dot-bashrc
@@ -19,7 +20,7 @@ Source7:	bashrc
 Source8:	profile.d-bash
 
 # Upstream patches
-%(for i in `seq 1 %{patchlevel}`; do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{version}-patches/bash`echo %{version} |sed -e 's,\\.,,g'`-`echo 000$i |rev |cut -b1-3 |rev`; done)
+%(for i in `seq 1 %{patchlevel}`; do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{major}-patches/bash`echo %{major} |sed -e 's,\\.,,g'`-`echo 000$i |rev |cut -b1-3 |rev`; done)
 
 Patch1000:	bash-2.02-security.patch
 # ensure profile is read (Redhat)
@@ -70,7 +71,7 @@ Provides:	bash3-doc
 This package provides documentation for GNU Bourne Again shell (bash).
 
 %prep
-%setup -q -a 2
+%setup -q -a 2 -n %{name}-%{major}
 mv doc/README .
 
 # Upstream patches
