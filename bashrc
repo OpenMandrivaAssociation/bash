@@ -21,6 +21,7 @@ if [ "$PS1" ]; then
     case $TERM in
 	xterm*)
 	    PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}"; echo -ne "\007"'
+        PROMPT_COMMAND='printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
 	    ;;
 	screen)
 	    PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/~}"; echo -ne "\033\\"'
@@ -28,6 +29,13 @@ if [ "$PS1" ]; then
 	*)
 	    ;;
     esac
+
+    # Turn on parallel history
+    shopt -s histappend
+    history -a
+    # Turn on checkwinsize
+    shopt -s checkwinsize
+
     [ "$PS1" = "\\s-\\v\\\$ " ] && PS1="[\u@\h \W]\\$ "
     # You might want to have e.g. tty in prompt (e.g. more virtual machines)
     # and console windows
