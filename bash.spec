@@ -1,17 +1,26 @@
 %define i18ndate 20010626
-%define patchlevel 33
-%define major 4.3
+%define patchlevel 0
+%define major 4.4
+%define pre alpha
 
 Name:		bash
+%if %patchlevel
 Version:	%{major}.%{patchlevel}
-Release:	4
+%else
+Version:	%{major}
+%endif
+%if "%{pre}" != ""
+Release:	0.%{pre}.1
+Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{major}-%{pre}.tar.gz
+%else
+Release:	1
+Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
+Source1:	%{SOURCE0}.sig
+%endif
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
-Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
-Source1:	%{SOURCE0}.sig
-Source2:	ftp://ftp.gnu.org/pub/gnu/bash/bash-doc-3.2.tar.bz2
 Source3:	dot-bashrc
 Source4:	dot-bash_profile
 Source5:	dot-bash_logout
@@ -20,7 +29,9 @@ Source7:	bashrc
 Source8:	profile.d-bash
 
 # Upstream patches
+%if %patchlevel
 %(for i in `seq 1 %{patchlevel}`; do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{major}-patches/bash`echo %{major} |sed -e 's,\\.,,g'`-`echo 000$i |rev |cut -b1-3 |rev`; done)
+%endif
 
 Patch1000:	bash-2.02-security.patch
 # ensure profile is read (Redhat)
@@ -29,10 +40,9 @@ Patch1002:	bash-2.05b-readlinefixes.patch
 Patch1003:	bash-2.04-compat.patch
 #https://bugzilla.novell.com/attachment.cgi?id=67684
 Patch1004:	bash-4.3-extended_quote.patch
-# Official upstream patches
-# none
 Patch1005:	bash-strcoll-bug.diff
 Patch1007:	bash-3.2-lzma-copmpletion.patch
+Patch1008:	bash-4.4-compile.patch
 # (proyvind): 4.2-5 add --rpm-requires option (Fedora) (mdvbz#61712)
 Patch1009:	bash-requires.patch
 Patch1010:	bash-ru-ua-l10n.patch
@@ -71,11 +81,17 @@ Provides:	bash3-doc
 This package provides documentation for GNU Bourne Again shell (bash).
 
 %prep
-%setup -q -a 2 -n %{name}-%{major}
+%if "%{pre}" != ""
+%setup -q -n %{name}-%{version}-%{pre}
+%else
+%setup -q -n %{name}-%{major}
+%endif
 mv doc/README .
 
+%if %patchlevel
 # Upstream patches
 %(for i in `seq 1 %{patchlevel}`; do echo %%patch$i -p0; done)
+%endif
 
 %patch1000 -p1 -b .security
 %patch1001 -p1 -b .profile
@@ -85,6 +101,7 @@ mv doc/README .
 %patch1004 -p1 -b .extended_quote
 %patch1005 -p1 -b .strcoll_bugx
 %patch1007 -p1 -b .lzma
+%patch1008 -p1 -b. compile~
 %patch1009 -p1 -b .requires~
 # bash-ru-ua-l10n.patch
 # Needs porting to 4.3
@@ -100,7 +117,7 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 cp -a %_datadir/libtool/config/* .
 cp -a %_datadir/libtool/config/* support/
 
-%configure2_5x \
+%configure \
     --enable-command-timing \
     --disable-rpath \
     --enable-history \
@@ -119,6 +136,15 @@ cp -a %_datadir/libtool/config/* support/
     --enable-coprocesses \
     --enable-directory-stack \
     --enable-brace-expansion
+
+# As of 4.4 alpha, there is no nb translation file, but it
+# is mentioned in the Makefiles anyway...
+if [ -e po/nb.po ]; then
+	echo "nb translation is back, remove the workaround"
+	exit 1
+else
+	sed -i -e 's,nb\.[a-z]* ,,g' po/Makefile
+fi
 
 %make
 

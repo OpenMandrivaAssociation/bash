@@ -1,0 +1,14 @@
+--- bash-4.4-alpha/lib/sh/snprintf.c.omv~	2015-07-28 00:58:45.520090677 +0200
++++ bash-4.4-alpha/lib/sh/snprintf.c	2015-07-28 01:01:34.812130857 +0200
+@@ -122,6 +122,11 @@
+ #include "stdc.h"
+ #include <shmbutil.h>
+ 
++/* We might just have #defines for the sprintf family of functions,
++ * for fortified versions */
++#undef asprintf
++#undef snprintf
++
+ #ifndef DRIVER
+ #  include "shell.h"
+ #else
