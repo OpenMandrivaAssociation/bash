@@ -1,9 +1,9 @@
 %define i18ndate 20010626
-%define patchlevel 30
+%define patchlevel 39
 
 Name:		bash
 Version:	4.3
-Release:	8
+Release:	8.1
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -95,8 +95,8 @@ sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' c
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 # Drag in support for aarch64-* and the likes
-cp -a %_datadir/libtool/config/* .
-cp -a %_datadir/libtool/config/* support/
+cp -a %{_datadir}/libtool/config/* .
+cp -a %{_datadir}/libtool/config/* support/
 
 %configure2_5x \
     --enable-command-timing \
