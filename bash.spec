@@ -10,7 +10,7 @@ Version:	%{major}.%{patchlevel}
 Version:	%{major}
 %endif
 %if "%{pre}" != ""
-Release:	0.%{pre}.1
+Release:	0.%{pre}.2
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{major}-%{pre}.tar.gz
 %else
 Release:	1
@@ -110,7 +110,6 @@ mv doc/README .
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
 %build
-%global optflags %{optflags} -Oz
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 # Drag in support for aarch64-* and the likes
