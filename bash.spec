@@ -129,7 +129,7 @@ cp -a %_datadir/libtool/config/* support/
     --disable-strict-posix-default \
     --enable-select \
     --enable-prompt-string-decoding \
-    --enable-process-substitution \
+    --disable-process-substitution \
     --enable-alias \
     --enable-bang-history \
     --enable-coprocesses \
