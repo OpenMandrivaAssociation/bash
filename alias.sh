@@ -60,3 +60,6 @@ alias du='du -h'
 # Size of a disk (by default Human Readable).
 # and don't probe supermount
 alias df='df -h -x supermount'
+
+# Always use all cores when running xz
+alias xz='xz -T0'

@@ -1,0 +1,12 @@
+diff -Naur bash-4.4-alpha/subst.c bash-4.4-alpha.tpg/subst.c
+--- bash-4.4-alpha/subst.c	2015-07-01 14:49:40.000000000 +0000
++++ bash-4.4-alpha.tpg/subst.c	2015-08-03 17:16:03.651797982 +0000
+@@ -5618,7 +5618,7 @@
+ 
+       if (c == 0)
+ 	{
+-#if 1
++#if 0
+ 	  internal_warning ("command substitution: ignored null byte in input");
+ #endif
+ 	  continue;

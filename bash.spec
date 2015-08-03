@@ -10,7 +10,7 @@ Version:	%{major}.%{patchlevel}
 Version:	%{major}
 %endif
 %if "%{pre}" != ""
-Release:	0.%{pre}.2
+Release:	0.%{pre}.3
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{major}-%{pre}.tar.gz
 %else
 Release:	1
@@ -46,6 +46,8 @@ Patch1008:	bash-4.4-compile.patch
 # (proyvind): 4.2-5 add --rpm-requires option (Fedora) (mdvbz#61712)
 Patch1009:	bash-requires.patch
 Patch1010:	bash-ru-ua-l10n.patch
+# (tpg) prolly this will be fixed in next release
+Patch1011:	bash-4.4-alpha-disable_warning_ignored_null_byte_in_input.patch
 BuildRequires:	autoconf2.5
 BuildRequires:	bison
 BuildRequires:	groff
@@ -106,6 +108,7 @@ mv doc/README .
 # bash-ru-ua-l10n.patch
 # Needs porting to 4.3
 #patch1010 -p1 -b .ruua
+%patch1011 -p1 -b .warn
 
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
@@ -129,7 +132,7 @@ cp -a %_datadir/libtool/config/* support/
     --disable-strict-posix-default \
     --enable-select \
     --enable-prompt-string-decoding \
-    --disable-process-substitution \
+    --enable-process-substitution \
     --enable-alias \
     --enable-bang-history \
     --enable-coprocesses \
