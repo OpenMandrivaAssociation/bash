@@ -1,17 +1,16 @@
 %define i18ndate 20010626
-%define patchlevel 33
+%define patchlevel 39
 %define major 4.3
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
-Release:	4
+Release:	1
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 Source1:	%{SOURCE0}.sig
-Source2:	ftp://ftp.gnu.org/pub/gnu/bash/bash-doc-3.2.tar.bz2
 Source3:	dot-bashrc
 Source4:	dot-bash_profile
 Source5:	dot-bash_logout
@@ -71,7 +70,7 @@ Provides:	bash3-doc
 This package provides documentation for GNU Bourne Again shell (bash).
 
 %prep
-%setup -q -a 2 -n %{name}-%{major}
+%setup -q -n %{name}-%{major}
 mv doc/README .
 
 # Upstream patches
