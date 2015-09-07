@@ -1,16 +1,15 @@
 %define i18ndate 20010626
-%define patchlevel 39
+%define patchlevel 42
 %define major 4.3
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
-Release:	1
+Release:	2
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
-Source1:	%{SOURCE0}.sig
 Source3:	dot-bashrc
 Source4:	dot-bash_profile
 Source5:	dot-bash_logout
@@ -99,7 +98,7 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 cp -a %_datadir/libtool/config/* .
 cp -a %_datadir/libtool/config/* support/
 
-%configure2_5x \
+%configure \
     --enable-command-timing \
     --disable-rpath \
     --enable-history \

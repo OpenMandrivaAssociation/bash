@@ -35,12 +35,12 @@ fi
 
 alias ls="ls $LS_OPTIONS"
 
-alias d="ls"                                                  
+alias d="ls"
 alias l="ls"       		# classical listing.
-alias ll="ls -l"   		# List detailled. 
-alias la='ls -a'     	# List all.               
+alias ll="ls -l"   		# List detailled.
+alias la='ls -a'     	# List all.
 alias lsd="ls -d */"		# List only the directory.
-alias cd..="cd .."		
+alias cd..="cd .."
 alias s="cd .."
 alias p="cd -"
 
@@ -55,8 +55,8 @@ alias egrep="egrep --color"      # colored grep by default
 alias fgrep="fgrep --color"      # colored grep by default
 
 # Size of a directory (by default Human Readable).
-alias du='du -h'                              
-                                              
-# Size of a disk (by default Human Readable). 
+alias du='du -h'
+
+# Size of a disk (by default Human Readable).
 # and don't probe supermount
 alias df='df -h -x supermount'

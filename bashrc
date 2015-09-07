@@ -44,7 +44,7 @@ if [ "$PS1" ]; then
     #   PS1="[\u@\h:\l \W]\\$ "
     # fi
     # to your custom modification shell script in /etc/profile.d/ directory
-    
+
     if [ -z "$loginsh" ]; then # We're not a login shell
 	# Not all scripts in profile.d are compatible with other shells
 	# TODO: make the scripts compatible or check the running shell by
