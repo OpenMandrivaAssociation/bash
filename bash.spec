@@ -84,7 +84,7 @@ mv doc/README .
 %patch1004 -p1 -b .extended_quote
 %patch1005 -p1 -b .strcoll_bugx
 %patch1007 -p1 -b .lzma
-%patch1009 -p1 -b .requires~
+#patch1009 -p1 -b .requires~
 # bash-ru-ua-l10n.patch
 # Needs porting to 4.3
 #patch1010 -p1 -b .ruua
