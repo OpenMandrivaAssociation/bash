@@ -1,7 +1,7 @@
 %define i18ndate 20010626
 %define patchlevel 0
 %define major 4.4
-%define snap beta
+%define snap rc1
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
