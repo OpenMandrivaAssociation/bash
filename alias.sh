@@ -53,6 +53,7 @@ alias rm="rm -i"
 alias grep="grep --color"      # colored grep by default
 alias egrep="egrep --color"      # colored grep by default
 alias fgrep="fgrep --color"      # colored grep by default
+alias dmesg="dmesg --ctime --color"      # colored dmesg by default
 
 # Size of a directory (by default Human Readable).
 alias du='du -h'                              

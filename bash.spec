@@ -3,7 +3,7 @@
 
 Name:		bash
 Version:	4.3
-Release:	8.1
+Release:	8.2
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
