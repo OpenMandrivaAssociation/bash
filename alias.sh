@@ -38,7 +38,7 @@ alias ls="ls $LS_OPTIONS"
 alias d="ls"
 alias l="ls"       		# classical listing.
 alias ll="ls -l"   		# List detailled.
-alias la='ls -a'     	# List all.
+alias la='ls -a'		# List all.
 alias lsd="ls -d */"		# List only the directory.
 alias cd..="cd .."
 alias s="cd .."
@@ -50,9 +50,14 @@ alias cp="cp -i"
 alias mv="mv -i"
 alias rm="rm -i"
 
-alias grep="grep --color"      # colored grep by default
-alias egrep="egrep --color"      # colored grep by default
-alias fgrep="fgrep --color"      # colored grep by default
+# colored grep by default
+alias grep="grep --color"
+# colored grep by default
+alias egrep="egrep --color"
+# colored grep by default
+alias fgrep="fgrep --color"
+# colored dmesg with human-readable timestamps by default
+alias dmesg="dmesg --ctime --color"
 
 # Size of a directory (by default Human Readable).
 alias du='du -h'
