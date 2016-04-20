@@ -36,7 +36,9 @@ if [ "$PS1" ]; then
 	# Turn on checkwinsize
 	shopt -s checkwinsize
 
-	[ "$PS1" = "\\s-\\v\\\$ " ] && PS1="\[\033[38;5;38m\]\H\[$(tput sgr0)\]\[\033[38;5;41m\]@\[$(tput sgr0)\]\[\033[38;5;38m\]\u\[$(tput sgr0)\]\[\033[38;5;249m\]:\[$(tput sgr0)\]\[\033[38;5;245m\][\[$(tput sgr0)\]\[\033[38;5;33m\]\w\[$(tput sgr0)\]\[\033[38;5;245m\]]\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]\[\033[38;5;196m\]\\$\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]"
+	[ "$PS1" = "\\s-\\v\\\$ " ] && PS1="[\u@\h \W]\\$ "
+	# For a more colorful version, use:
+	# [ "$PS1" = "\\s-\\v\\\$ " ] && PS1="\[\033[38;5;38m\]\H\[$(tput sgr0)\]\[\033[38;5;41m\]@\[$(tput sgr0)\]\[\033[38;5;38m\]\u\[$(tput sgr0)\]\[\033[38;5;249m\]:\[$(tput sgr0)\]\[\033[38;5;245m\][\[$(tput sgr0)\]\[\033[38;5;33m\]\w\[$(tput sgr0)\]\[\033[38;5;245m\]]\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]\[\033[38;5;196m\]\\$\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]"
 	# You might want to have e.g. tty in prompt (e.g. more virtual machines)
 	# and console windows
 	# If you want to do so, just add e.g.
