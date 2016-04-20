@@ -5,7 +5,7 @@
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
-Release:	0.%{snap}.6
+Release:	0.%{snap}.7
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
