@@ -1,15 +1,14 @@
 %define i18ndate 20010626
-%define patchlevel 39
+%define patchlevel 46
 
 Name:		bash
 Version:	4.3
-Release:	8.2
+Release:	8.3
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{version}.tar.gz
-Source1:	%{SOURCE0}.sig
 Source2:	ftp://ftp.gnu.org/pub/gnu/bash/bash-doc-3.2.tar.bz2
 Source3:	dot-bashrc
 Source4:	dot-bash_profile
