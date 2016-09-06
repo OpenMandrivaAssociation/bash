@@ -1,11 +1,11 @@
 %define i18ndate 20010626
 %define patchlevel 0
 %define major 4.4
-%define snap rc1
+%define snap rc2
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
-Release:	0.%{snap}.9
+Release:	0.%{snap}.10
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
