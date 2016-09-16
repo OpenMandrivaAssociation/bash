@@ -1,16 +1,16 @@
 %define i18ndate 20010626
 %define patchlevel 0
 %define major 4.4
-%define snap rc2
+%define snap %nil
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
-Release:	0.%{snap}.10
+Release:	1
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
-Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}-%{snap}.tar.gz
+Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 Source3:	dot-bashrc
 Source4:	dot-bash_profile
 Source5:	dot-bash_logout
@@ -70,7 +70,7 @@ Provides:	bash3-doc
 This package provides documentation for GNU Bourne Again shell (bash).
 
 %prep
-%setup -q -n %{name}-%{major}-%{snap}
+%setup -q -n %{name}-%{major}
 mv doc/README .
 
 # Upstream patches
