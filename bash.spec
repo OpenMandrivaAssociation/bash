@@ -1,5 +1,5 @@
 %define i18ndate 20010626
-%define patchlevel 0
+%define patchlevel 5
 %define major 4.4
 %define snap %nil
 
