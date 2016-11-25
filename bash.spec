@@ -5,7 +5,7 @@
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
-Release:	1
+Release:	2
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -100,6 +100,14 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 # Drag in support for aarch64-* and the likes
 cp -a %_datadir/libtool/config/* .
 cp -a %_datadir/libtool/config/* support/
+
+# (tpg) remove built-in libraries
+rm -rf lib/{readline,termcap}/*
+touch lib/{readline,termcap}/Makefile.in # for config.status
+sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
+
+# (tpg) set readline version
+export ac_cv_rl_version=7.0
 
 %configure \
     --enable-command-timing \
