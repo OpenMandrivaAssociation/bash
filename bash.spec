@@ -107,9 +107,6 @@ rm -rf lib/{readline,termcap}/*
 touch lib/{readline,termcap}/Makefile.in # for config.status
 sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
 
-# (tpg) set readline version
-export ac_cv_rl_version=7.0
-
 %configure \
     --enable-command-timing \
     --disable-rpath \
@@ -240,10 +237,8 @@ cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
 /bin/bash
 /bin/sh
 %{_infodir}/bash.info*
-%{_mandir}/man1/bash.1*
 %{_mandir}/man1/rbash.1*
 %{_mandir}/man1/builtins.1*
-%{_mandir}/man1/bashbug.1*
 %{_bindir}/bashbug
 
 %files doc
