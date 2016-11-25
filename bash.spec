@@ -5,7 +5,7 @@
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
-Release:	1
+Release:	2
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -40,6 +40,7 @@ BuildRequires:	bison
 BuildRequires:	groff
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	texinfo
+BuildRequires:	readline-devel
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
 Conflicts:	setup < 2.7.4-1mdv
@@ -100,6 +101,11 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 # Drag in support for aarch64-* and the likes
 cp -a %_datadir/libtool/config/* .
 cp -a %_datadir/libtool/config/* support/
+
+# (tpg) remove built-in libraries
+rm -rf lib/{readline,termcap}/*
+touch lib/{readline,termcap}/Makefile.in # for config.status
+sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
 
 %configure \
     --enable-command-timing \
@@ -231,10 +237,8 @@ cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
 /bin/bash
 /bin/sh
 %{_infodir}/bash.info*
-%{_mandir}/man1/bash.1*
 %{_mandir}/man1/rbash.1*
 %{_mandir}/man1/builtins.1*
-%{_mandir}/man1/bashbug.1*
 %{_bindir}/bashbug
 
 %files doc
