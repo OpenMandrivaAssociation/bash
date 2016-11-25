@@ -40,6 +40,7 @@ BuildRequires:	bison
 BuildRequires:	groff
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	texinfo
+BuildRequires:	readline-devel
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
 Conflicts:	setup < 2.7.4-1mdv
