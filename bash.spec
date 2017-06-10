@@ -1,5 +1,5 @@
 %define i18ndate 20010626
-%define patchlevel 11
+%define patchlevel 12
 %define major 4.4
 %define snap %nil
 
@@ -93,14 +93,11 @@ mv doc/README .
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
 %build
-export CC=gcc
-export CXX=g++
-
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 # Drag in support for aarch64-* and the likes
-cp -a %_datadir/libtool/config/* .
-cp -a %_datadir/libtool/config/* support/
+cp -a %{_datadir}/libtool/config/* .
+cp -a %{_datadir}/libtool/config/* support/
 
 # (tpg) remove built-in libraries
 rm -rf lib/{readline,termcap}/*
