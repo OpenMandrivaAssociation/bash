@@ -5,7 +5,7 @@
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
-Release:	3
+Release:	4
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
@@ -41,7 +41,6 @@ BuildRequires:	groff
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	texinfo
 BuildRequires:	readline-devel
-BuildRequires:	gcc
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
 Conflicts:	setup < 2.7.4-1mdv
@@ -94,11 +93,6 @@ mv doc/README .
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
 %build
-# (tpg) build bash with GCC, as with LLVM/clang it still gives some strange errors
-# 2017-10-25 without GCC, dockher-builder creates strange binaries i.e. NetworkManager
-export CC=gcc
-export CXX=g++
-
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 # Drag in support for aarch64-* and the likes
