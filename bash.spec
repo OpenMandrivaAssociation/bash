@@ -1,11 +1,11 @@
 %define i18ndate 20010626
-%define patchlevel 12
+%define patchlevel 18
 %define major 4.4
 %define snap %nil
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
-Release:	4
+Release:	1
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
