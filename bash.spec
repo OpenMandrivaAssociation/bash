@@ -3,6 +3,9 @@
 %define major 4.4
 %define snap %nil
 
+# Bash is our default /bin/sh
+%bcond_without bin_sh
+
 # (tpg) optimize it a bit
 %global optflags %{optflags} -O3
 
@@ -38,7 +41,7 @@ Patch1007:	bash-3.2-lzma-copmpletion.patch
 # (proyvind): 4.2-5 add --rpm-requires option (Fedora) (mdvbz#61712)
 Patch1009:	bash-requires.patch
 Patch1010:	bash-ru-ua-l10n.patch
-BuildRequires:	autoconf2.5
+BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	groff
 BuildRequires:	pkgconfig(ncursesw)
@@ -48,7 +51,11 @@ Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
 Conflicts:	setup < 2.7.4-1mdv
 # explicit file provides
+%if %{with bin_sh}
 Provides:	/bin/sh
+%endif
+Suggests:	bash-doc
+Suggests:	bashbug
 
 %description
 Bash is a GNU project sh-compatible shell or command language
@@ -63,12 +70,22 @@ integer arithmetic in any base from two to 64. Bash is ultimately
 intended to conform to the IEEE POSIX P1003.2/ISO 9945.2 Shell and
 Tools standard.
 
+%package -n bashbug
+Summary:	Report a bug in bash
+Group:		Shells
+Conflicts:	bash < 4.4.19-1
+
+%description -n bashbug
+bashbug is a shell script to help the user compose and mail bug reports
+concerning bash in a standard format.
+
 %package doc
 Summary:	Documentation for the GNU Bourne Again shell (bash)
 Group:		Books/Computer books
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	bash3-doc < 3.2.48
-Provides:	bash3-doc
+Provides:	bash3-doc = %{EVRD}
+Conflicts:	bash < 4.4.19-1
 
 %description doc
 This package provides documentation for GNU Bourne Again shell (bash).
@@ -152,15 +169,17 @@ chmod 755 %{buildroot}%{_bindir}/bashbug
 # Take out irritating ^H's from the documentation
 mkdir tmp_doc
 for i in $(/bin/ls doc/) ; \
-	do cat doc/$i > tmp_doc/$i ; \
-	cat tmp_doc/$i | perl -p -e 's/.//g' > doc/$i ; \
-	rm tmp_doc/$i ; \
-	done
+    do cat doc/$i > tmp_doc/$i ; \
+    cat tmp_doc/$i | perl -p -e 's/.//g' > doc/$i ; \
+    rm tmp_doc/$i ; \
+    done
 rmdir tmp_doc
 
 mkdir -p %{buildroot}/bin
 ( cd %{buildroot} && mv usr/bin/bash bin/bash )
+%if %{with bin_sh}
 ( cd %{buildroot}/bin && ln -s bash sh )
+%endif
 
 # make builtins.1 and rbash.1 with bash.1 in place (fix mdv#51379)
 (cd doc
@@ -191,11 +210,11 @@ install -m 644 bash.1 %{buildroot}%{_mandir}/man1/bash.1
 install -m 644 rbash.1 %{buildroot}%{_mandir}/man1/rbash.1
 install -m 644 bashbug.1 %{buildroot}%{_mandir}/man1/bashbug.1
 
-for i in `cat man.pages` ; do
+for i in $(cat man.pages) ; do
 # install man-page
-	echo .so man1/builtins.1 > %{buildroot}%{_mandir}/man1/$i.1
+    echo .so man1/builtins.1 > %{buildroot}%{_mandir}/man1/$i.1
 # now turn man.page into a filelist for the man subpackage
-	echo "%{_mandir}/man1/$i.1%{_extension}" >> ../man.pages.filelist
+    echo "%{_mandir}/man1/$i.1%{_extension}" >> ../man.pages.filelist
 done
 
 cat man.pages |tr -s ' ' '\n' |sed '
@@ -222,7 +241,7 @@ install -m 644 bash.info %{buildroot}%{_infodir}
 %find_lang %{name}
 
 # merges list
-cat man.pages.filelist %{name}.lang > files.list
+cat  %{name}.lang > files.list
 
 # install documentation manually in expected place
 install -d -m 755 %{buildroot}%{_docdir}/%{name}
@@ -231,24 +250,25 @@ install -m 644 README COMPAT NEWS NOTES POSIX CHANGES \
 cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
     %{buildroot}%{_docdir}/%{name}
 
-%files -f files.list
-%dir %{_docdir}/%{name}
-%{_docdir}/%{name}/README
+%files -f %{name}.lang
 %config(noreplace) %{_sysconfdir}/skel/.b*
 %{_sysconfdir}/profile.d/60alias.sh
 %{_sysconfdir}/profile.d/95bash-extras.sh
 %config(noreplace) %{_sysconfdir}/bashrc
 /bin/rbash
 /bin/bash
+%if %{with bin_sh}
 /bin/sh
+%endif
+
+%files -n bashbug
+%{_bindir}/bashbug
+%{_mandir}/man1/bashbug.1* 
+
+%files doc -f man.pages.filelist
+%dir %{_docdir}/%{name}
+%{_docdir}/%{name}/*
 %{_infodir}/bash.info*
 %{_mandir}/man1/bash.1*
 %{_mandir}/man1/rbash.1*
-%{_mandir}/man1/bashbug.1* 
 %{_mandir}/man1/builtins.1*
-%{_bindir}/bashbug
-
-%files doc
-%defattr(-,root,root)
-%{_docdir}/%{name}/*
-%exclude %{_docdir}/%{name}/README
