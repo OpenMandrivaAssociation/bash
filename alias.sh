@@ -13,9 +13,9 @@
 [ -n "$IGNORE_SYSTEM_ALIASES" ] && return 0
 
 if [ -f ~/.dir_colors ]; then
-	eval `dircolors --sh ~/.dir_colors`
+    eval $(dircolors --sh ~/.dir_colors)
 else
-	eval `dircolors --sh /etc/DIR_COLORS`
+    eval $(dircolors --sh /etc/DIR_COLORS)
 fi
 
 # Don't define aliases in plain Bourne shell
@@ -36,8 +36,8 @@ fi
 alias ls="ls $LS_OPTIONS"
 
 alias d="ls"
-alias l="ls"       		# classical listing.
-alias ll="ls -l"   		# List detailled.
+alias l="ls"			# classical listing.
+alias ll="ls -l"		# List detailled.
 alias la='ls -a'		# List all.
 alias lsd="ls -d */"		# List only the directory.
 alias cd..="cd .."

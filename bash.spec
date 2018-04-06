@@ -1,7 +1,10 @@
 %define i18ndate 20010626
-%define patchlevel 18
+%define patchlevel 19
 %define major 4.4
 %define snap %nil
+
+# (tpg) optimize it a bit
+%global optflags %{optflags} -O3
 
 Name:		bash
 Version:	%{major}.%{patchlevel}
@@ -126,7 +129,7 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
     --enable-cond-command \
     --enable-extended-glob \
     --enable-progcomp \
-    --enable-arith-for-command 
+    --enable-arith-for-command
 
 %make
 
@@ -148,7 +151,7 @@ chmod 755 %{buildroot}%{_bindir}/bashbug
 
 # Take out irritating ^H's from the documentation
 mkdir tmp_doc
-for i in `/bin/ls doc/` ; \
+for i in $(/bin/ls doc/) ; \
 	do cat doc/$i > tmp_doc/$i ; \
 	cat tmp_doc/$i | perl -p -e 's/.//g' > doc/$i ; \
 	rm tmp_doc/$i ; \
