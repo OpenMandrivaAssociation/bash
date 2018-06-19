@@ -1,7 +1,7 @@
 %define i18ndate 20010626
-%define patchlevel 19
-%define major 4.4
-%define snap %nil
+%define patchlevel %nil
+%define major 5.0
+%define beta alpha
 
 # Bash is our default /bin/sh
 %bcond_without bin_sh
@@ -10,13 +10,19 @@
 %global optflags %{optflags} -O3
 
 Name:		bash
+%if "%{beta}" != ""
+Version:	%{major}
+Release:	0.%{beta}.1
+Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}-%{beta}.tar.gz
+%else
 Version:	%{major}.%{patchlevel}
 Release:	1
+Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
+%endif
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
-Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 Source3:	dot-bashrc
 Source4:	dot-bash_profile
 Source5:	dot-bash_logout
@@ -24,13 +30,14 @@ Source6:	alias.sh
 Source7:	bashrc
 Source8:	profile.d-bash
 
+%if 0%{patchlevel}
 # Upstream patches
 %(for i in `seq 1 %{patchlevel}`; do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{major}-patches/bash`echo %{major} |sed -e 's,\\.,,g'`-`echo 000$i |rev |cut -b1-3 |rev`; done)
+%endif
 
 Patch1000:	bash-2.02-security.patch
 # ensure profile is read (Redhat)
 Patch1001:	bash-4.0-profile.patch
-Patch1002:	bash-2.05b-readlinefixes.patch
 Patch1003:	bash-2.04-compat.patch
 #https://bugzilla.novell.com/attachment.cgi?id=67684
 Patch1004:	bash-4.3-extended_quote.patch
@@ -41,12 +48,13 @@ Patch1007:	bash-3.2-lzma-copmpletion.patch
 # (proyvind): 4.2-5 add --rpm-requires option (Fedora) (mdvbz#61712)
 Patch1009:	bash-requires.patch
 Patch1010:	bash-ru-ua-l10n.patch
+Patch1011:	bash-5.0-no-internal-libc.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	groff
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	texinfo
-BuildRequires:	readline-devel
+BuildRequires:	pkgconfig(readline)
 Conflicts:	etcskel <= 1.63-11mdk
 Conflicts:	fileutils < 4.1-5mdk
 Conflicts:	setup < 2.7.4-1mdv
@@ -91,11 +99,17 @@ Conflicts:	bash < 4.4.19-1
 This package provides documentation for GNU Bourne Again shell (bash).
 
 %prep
+%if "%{beta}" != ""
+%setup -qn %{name}-%{version}-%{beta}
+%else
 %setup -q -n %{name}-%{major}
+%endif
 mv doc/README .
 
+%if 0%{patchlevel}
 # Upstream patches
 %(for i in `seq 1 %{patchlevel}`; do echo %%patch$i -p0; done)
+%endif
 
 %patch1000 -p1 -b .security
 %patch1001 -p1 -b .profile
@@ -105,10 +119,11 @@ mv doc/README .
 %patch1004 -p1 -b .extended_quote
 %patch1005 -p1 -b .strcoll_bugx
 %patch1007 -p1 -b .lzma
-#patch1009 -p1 -b .requires~
+%patch1009 -p1 -b .requires~
 # bash-ru-ua-l10n.patch
 # Needs porting to 4.3
 #patch1010 -p1 -b .ruua
+%patch1011 -p1 -b .libc~
 
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 

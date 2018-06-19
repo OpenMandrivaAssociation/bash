@@ -1,38 +1,39 @@
---- bash-4.3/builtins.h.requires~	2013-10-14 15:13:16.000000000 +0200
-+++ bash-4.3/builtins.h	2014-03-03 02:45:17.678866495 +0100
-@@ -41,6 +41,8 @@
- #define SPECIAL_BUILTIN 0x08	/* This is a Posix `special' builtin. */
+diff -up bash-5.0-alpha/builtins.h.requires~ bash-5.0-alpha/builtins.h
+--- bash-5.0-alpha/builtins.h.requires~	2018-06-18 03:26:30.700386488 +0200
++++ bash-5.0-alpha/builtins.h	2018-06-18 13:46:55.086335266 +0200
+@@ -45,6 +45,7 @@
  #define ASSIGNMENT_BUILTIN 0x10	/* This builtin takes assignment statements. */
  #define POSIX_BUILTIN	0x20	/* This builtins is special in the Posix command search order. */
-+#define REQUIRES_BUILTIN 0x40	/* This builtin requires other files. */
-+
+ #define LOCALVAR_BUILTIN   0x40	/* This builtin creates local variables */
++#define REQUIRES_BUILTIN   0x80 /* RPM requires detector */
  
  #define BASE_INDENT	4
  
---- bash-4.3/builtins/mkbuiltins.c.requires~	2013-10-14 15:20:34.000000000 +0200
-+++ bash-4.3/builtins/mkbuiltins.c	2014-03-03 02:46:37.935381288 +0100
-@@ -69,9 +69,15 @@ extern char *strcpy ();
+diff -up bash-5.0-alpha/builtins/mkbuiltins.c.requires~ bash-5.0-alpha/builtins/mkbuiltins.c
+--- bash-5.0-alpha/builtins/mkbuiltins.c.requires~	2016-01-25 19:29:03.000000000 +0100
++++ bash-5.0-alpha/builtins/mkbuiltins.c	2018-06-18 13:48:25.454330286 +0200
+@@ -69,10 +69,15 @@ extern char *strcpy ();
  #define whitespace(c) (((c) == ' ') || ((c) == '\t'))
  
  /* Flag values that builtins can have. */
-+/*  These flags are for the C code generator, 
++/*  These flags are for the C code generator,
 +    the C which is produced (./builtin.c)
-+    includes the flags definitions found 
++    includes the flags definitions found
 +    in ../builtins.h */
  #define BUILTIN_FLAG_SPECIAL	0x01
  #define BUILTIN_FLAG_ASSIGNMENT 0x02
- #define BUILTIN_FLAG_POSIX_BUILTIN 0x04
-+#define BUILTIN_FLAG_REQUIRES	0x08
-+
+ #define BUILTIN_FLAG_LOCALVAR	0x04
+ #define BUILTIN_FLAG_POSIX_BUILTIN 0x08
++#define BUILTIN_FLAG_REQUIRES	0x10
  
  #define BASE_INDENT	4
  
-@@ -167,10 +173,18 @@ char *posix_builtins[] =
+@@ -173,11 +178,19 @@ char *posix_builtins[] =
    (char *)NULL
  };
  
 +/* The builtin commands that cause requirements on other files. */
-+static char *requires_builtins[] =
++static const char *requires_builtins[] =
 +{
 +  ".", "command", "exec", "source", "inlib",
 +  (char *)NULL
@@ -41,36 +42,37 @@
  /* Forward declarations. */
  static int is_special_builtin ();
  static int is_assignment_builtin ();
+ static int is_localvar_builtin ();
  static int is_posix_builtin ();
 +static int is_requires_builtin ();
  
  #if !defined (HAVE_RENAME)
  static int rename ();
-@@ -822,6 +836,9 @@ builtin_handler (self, defs, arg)
-     new->flags |= BUILTIN_FLAG_ASSIGNMENT;
+@@ -831,6 +844,8 @@ builtin_handler (self, defs, arg)
+     new->flags |= BUILTIN_FLAG_LOCALVAR;
    if (is_posix_builtin (name))
      new->flags |= BUILTIN_FLAG_POSIX_BUILTIN;
 +  if (is_requires_builtin (name))
 +    new->flags |= BUILTIN_FLAG_REQUIRES;
-+
  
    array_add ((char *)new, defs->builtins);
    building_builtin = 1;
-@@ -1239,11 +1256,12 @@ write_builtins (defs, structfile, extern
+@@ -1250,12 +1265,13 @@ write_builtins (defs, structfile, extern
  		  else
  		    fprintf (structfile, "(sh_builtin_func_t *)0x0, ");
  
--		  fprintf (structfile, "%s%s%s%s, %s_doc,\n",
-+		  fprintf (structfile, "%s%s%s%s%s, %s_doc,\n",
+-		  fprintf (structfile, "%s%s%s%s%s, %s_doc,\n",
++		  fprintf (structfile, "%s%s%s%s%s%s, %s_doc,\n",
  		    "BUILTIN_ENABLED | STATIC_BUILTIN",
  		    (builtin->flags & BUILTIN_FLAG_SPECIAL) ? " | SPECIAL_BUILTIN" : "",
  		    (builtin->flags & BUILTIN_FLAG_ASSIGNMENT) ? " | ASSIGNMENT_BUILTIN" : "",
+ 		    (builtin->flags & BUILTIN_FLAG_LOCALVAR) ? " | LOCALVAR_BUILTIN" : "",
  		    (builtin->flags & BUILTIN_FLAG_POSIX_BUILTIN) ? " | POSIX_BUILTIN" : "",
 +		    (builtin->flags & BUILTIN_FLAG_REQUIRES) ? " | REQUIRES_BUILTIN" : "",
  		    document_name (builtin));
  
- 		  if (inhibit_functions)
-@@ -1614,6 +1632,13 @@ is_posix_builtin (name)
+ 		  /* Don't translate short document summaries that are identical
+@@ -1645,6 +1661,13 @@ is_posix_builtin (name)
    return (_find_in_table (name, posix_builtins));
  }
  
@@ -84,9 +86,10 @@
  #if !defined (HAVE_RENAME)
  static int
  rename (from, to)
---- bash-4.3/doc/bash.1.requires~	2014-02-06 15:03:52.000000000 +0100
-+++ bash-4.3/doc/bash.1	2014-03-03 02:45:17.679866502 +0100
-@@ -234,6 +234,14 @@ The shell becomes restricted (see
+diff -up bash-5.0-alpha/doc/bash.1.requires~ bash-5.0-alpha/doc/bash.1
+--- bash-5.0-alpha/doc/bash.1.requires~	2018-06-18 03:26:30.701386488 +0200
++++ bash-5.0-alpha/doc/bash.1	2018-06-18 13:49:04.850328115 +0200
+@@ -239,6 +239,14 @@ The shell becomes restricted (see
  .B "RESTRICTED SHELL"
  below).
  .TP
@@ -99,11 +102,12 @@
 +builtin are not parsed so some dependencies may be missed.
 +.TP
  .B \-\-verbose
- Equivalent to  \fB\-v\fP.
+ Equivalent to \fB\-v\fP.
  .TP
---- bash-4.3/doc/bashref.texi.requires~	2014-02-22 19:20:36.000000000 +0100
-+++ bash-4.3/doc/bashref.texi	2014-03-03 02:45:17.680866508 +0100
-@@ -6063,6 +6063,13 @@ standard.  @xref{Bash POSIX Mode}, for a
+diff -up bash-5.0-alpha/doc/bashref.texi.requires~ bash-5.0-alpha/doc/bashref.texi
+--- bash-5.0-alpha/doc/bashref.texi.requires~	2018-05-08 14:49:45.000000000 +0200
++++ bash-5.0-alpha/doc/bashref.texi	2018-06-18 03:26:30.702386488 +0200
+@@ -6393,6 +6393,13 @@ standard.  @xref{Bash POSIX Mode}, for a
  @item --restricted
  Make the shell a restricted shell (@pxref{The Restricted Shell}).
  
@@ -117,17 +121,19 @@
  @item --verbose
  Equivalent to @option{-v}.  Print shell input lines as they're read.
  
---- bash-4.3/eval.c.requires~	2013-10-14 15:22:43.000000000 +0200
-+++ bash-4.3/eval.c	2014-03-03 02:47:35.776753702 +0100
-@@ -53,6 +53,7 @@ extern int last_command_exit_value, stdi
- extern int need_here_doc;
- extern int current_command_number, current_command_line_count, line_number;
- extern int expand_aliases;
-+extern int rpm_requires;
- 
- #if defined (HAVE_POSIX_SIGNALS)
+diff -up bash-5.0-alpha/eval.c.requires~ bash-5.0-alpha/eval.c
+--- bash-5.0-alpha/eval.c.requires~	2018-02-12 00:40:12.000000000 +0100
++++ bash-5.0-alpha/eval.c	2018-06-18 13:46:20.766337157 +0200
+@@ -52,6 +52,8 @@
  extern sigset_t top_level_mask;
-@@ -144,7 +145,7 @@ reader_loop ()
+ #endif
+ 
++extern int rpm_requires;
++
+ static void send_pwd_to_eterm __P((void));
+ static sighandler alrm_catcher __P((int));
+ 
+@@ -139,7 +141,7 @@ reader_loop ()
  
        if (read_command () == 0)
  	{
@@ -136,9 +142,10 @@
  	    {
  	      last_command_exit_value = EXECUTION_SUCCESS;
  	      dispose_command (global_command);
---- bash-4.3/execute_cmd.c.requires~	2014-01-31 16:54:52.000000000 +0100
-+++ bash-4.3/execute_cmd.c	2014-03-03 02:49:30.351614431 +0100
-@@ -514,6 +514,8 @@ async_redirect_stdin ()
+diff -up bash-5.0-alpha/execute_cmd.c.requires~ bash-5.0-alpha/execute_cmd.c
+--- bash-5.0-alpha/execute_cmd.c.requires~	2018-05-10 16:16:21.000000000 +0200
++++ bash-5.0-alpha/execute_cmd.c	2018-06-18 03:26:30.703386488 +0200
+@@ -538,6 +538,8 @@ async_redirect_stdin ()
  
  #define DESCRIBE_PID(pid) do { if (interactive) describe_pid (pid); } while (0)
  
@@ -147,7 +154,7 @@
  /* Execute the command passed in COMMAND, perhaps doing it asynchronously.
     COMMAND is exactly what read_command () places into GLOBAL_COMMAND.
     ASYNCHROUNOUS, if non-zero, says to do this command in the background.
-@@ -546,7 +548,13 @@ execute_command_internal (command, async
+@@ -569,7 +571,13 @@ execute_command_internal (command, async
  
    if (breaking || continuing)
      return (last_command_exit_value);
@@ -162,7 +169,7 @@
      return (EXECUTION_SUCCESS);
  
    QUIT;
-@@ -5338,7 +5346,7 @@ execute_intern_function (name, funcdef)
+@@ -5783,7 +5791,7 @@ execute_intern_function (name, funcdef)
  
    if (check_identifier (name, posixly_correct) == 0)
      {
@@ -171,8 +178,9 @@
  	{
  	  last_command_exit_value = EX_BADUSAGE;
  	  jump_to_top_level (ERREXIT);
---- bash-4.3/execute_cmd.h.requires~	2009-01-16 22:20:15.000000000 +0100
-+++ bash-4.3/execute_cmd.h	2014-03-03 02:45:17.681866515 +0100
+diff -up bash-5.0-alpha/execute_cmd.h.requires~ bash-5.0-alpha/execute_cmd.h
+--- bash-5.0-alpha/execute_cmd.h.requires~	2018-06-18 03:26:30.703386488 +0200
++++ bash-5.0-alpha/execute_cmd.h	2018-06-18 13:45:53.901338637 +0200
 @@ -22,6 +22,8 @@
  #define _EXECUTE_CMD_H_
  
@@ -180,38 +188,26 @@
 +#include "variables.h"
 +#include "command.h"
  
- extern struct fd_bitmap *new_fd_bitmap __P((int));
- extern void dispose_fd_bitmap __P((struct fd_bitmap *));
---- bash-4.3/make_cmd.c.requires~	2011-12-16 14:08:01.000000000 +0100
-+++ bash-4.3/make_cmd.c	2014-03-03 02:45:17.682866521 +0100
-@@ -42,11 +42,15 @@
- #include "flags.h"
- #include "make_cmd.h"
- #include "dispose_cmd.h"
-+#include "execute_cmd.h"
- #include "variables.h"
- #include "subst.h"
- #include "input.h"
- #include "ocache.h"
- #include "externs.h"
+ #if defined (ARRAY_VARS)
+ struct func_array_state
+diff -up bash-5.0-alpha/make_cmd.c.requires~ bash-5.0-alpha/make_cmd.c
+--- bash-5.0-alpha/make_cmd.c.requires~	2018-01-04 21:31:38.000000000 +0100
++++ bash-5.0-alpha/make_cmd.c	2018-06-18 13:45:16.614340692 +0200
+@@ -46,7 +46,13 @@
+ 
+ #include "shmbutil.h"
+ 
 +#include "builtins.h"
-+
 +#include "builtins/common.h"
- 
- #if defined (JOB_CONTROL)
- #include "jobs.h"
-@@ -56,6 +60,10 @@
- 
- extern int line_number, current_command_line_count, parser_state;
- extern int last_command_exit_value;
-+extern int rpm_requires;
 +
-+static char *alphabet_set = "abcdefghijklmnopqrstuvwxyz"
-+                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+ int here_doc_first_line = 0;
++extern int rpm_requires;
++static const char *alphabet_set = "abcdefghijklmnopqrstuvwxyz"
++	"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
  
  /* Object caching */
  sh_obj_cache_t wdcache = {0, 0, 0};
-@@ -823,6 +831,27 @@ make_coproc_command (name, command)
+@@ -828,6 +834,27 @@ make_coproc_command (name, command)
    return (make_command (cm_coproc, (SIMPLE_COM *)temp));
  }
  
@@ -239,7 +235,7 @@
  /* Reverse the word list and redirection list in the simple command
     has just been parsed.  It seems simpler to do this here the one
     time then by any other method that I can think of. */
-@@ -840,6 +869,27 @@ clean_simple_command (command)
+@@ -845,6 +872,27 @@ clean_simple_command (command)
  	REVERSE_LIST (command->value.Simple->redirects, REDIRECT *);
      }
  
@@ -267,11 +263,12 @@
    parser_state &= ~PST_REDIRLIST;
    return (command);
  }
---- bash-4.3/shell.c.requires~	2014-01-14 14:04:32.000000000 +0100
-+++ bash-4.3/shell.c	2014-03-03 02:50:07.375893743 +0100
+diff -up bash-5.0-alpha/shell.c.requires~ bash-5.0-alpha/shell.c
+--- bash-5.0-alpha/shell.c.requires~	2018-02-16 20:28:18.000000000 +0100
++++ bash-5.0-alpha/shell.c	2018-06-18 03:32:08.445367877 +0200
 @@ -193,6 +193,9 @@ int have_devfd = 0;
  /* The name of the .(shell)rc file. */
- static char *bashrc_file = "~/.bashrc";
+ static char *bashrc_file = DEFAULT_BASHRC;
  
 +/* Non-zero if we are finding the scripts requirements. */
 +int rpm_requires;
@@ -279,7 +276,7 @@
  /* Non-zero means to act more like the Bourne shell on startup. */
  static int act_like_sh;
  
-@@ -256,6 +259,7 @@ static const struct {
+@@ -259,6 +262,7 @@ static const struct {
    { "protected", Int, &protected_mode, (char **)0x0 },
  #endif
    { "rcfile", Charp, (int *)0x0, &bashrc_file },
@@ -287,7 +284,7 @@
  #if defined (RESTRICTED_SHELL)
    { "restricted", Int, &restricted, (char **)0x0 },
  #endif
-@@ -492,6 +496,12 @@ main (argc, argv, env)
+@@ -496,6 +500,12 @@ main (argc, argv, env)
    if (dump_translatable_strings)
      read_but_dont_execute = 1;
  
