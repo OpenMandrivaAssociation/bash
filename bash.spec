@@ -12,11 +12,11 @@
 Name:		bash
 %if "%{beta}" != ""
 Version:	%{major}
-Release:	0.%{beta}.1
+Release:	0.%{beta}.2
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
-Release:	2
+Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
