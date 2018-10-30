@@ -16,7 +16,7 @@ Release:	0.%{beta}.3
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
-Release:	1
+Release:	2
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
