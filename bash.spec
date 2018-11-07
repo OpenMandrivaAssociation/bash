@@ -6,17 +6,14 @@
 # Bash is our default /bin/sh
 %bcond_without bin_sh
 
-# (tpg) optimize it a bit
-%global optflags %{optflags} -O3
-
 Name:		bash
 %if "%{beta}" != ""
 Version:	%{major}
-Release:	0.%{beta}.3
+Release:	0.%{beta}.4
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
-Release:	2
+Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
@@ -163,14 +160,14 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
     --enable-progcomp \
     --enable-arith-for-command
 
-%make
+%make_build
 
 # all tests must pass
 %check
 make check
 
 %install
-%makeinstall_std
+%make_install
 
 # beurk
 rm -rf %{buildroot}%{_datadir}/locale/en@boldquot/ %{buildroot}%{_datadir}/locale/en@quot/
