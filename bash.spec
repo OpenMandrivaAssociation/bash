@@ -9,7 +9,7 @@
 Name:		bash
 %if "%{beta}" != ""
 Version:	%{major}
-Release:	0.%{beta}.1
+Release:	0.%{beta}.5
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{major}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
