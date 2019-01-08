@@ -1,7 +1,7 @@
 %define i18ndate 20010626
 %define patchlevel %nil
 %define major 5.0
-%define beta beta2
+%define beta %{nil}
 
 # Bash is our default /bin/sh
 %bcond_without bin_sh
@@ -9,7 +9,7 @@
 Name:		bash
 %if "%{beta}" != ""
 Version:	%{major}
-Release:	0.%{beta}.5
+Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{major}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
