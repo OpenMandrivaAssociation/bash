@@ -12,8 +12,8 @@ Version:	%{major}
 Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{major}-%{beta}.tar.gz
 %else
-Version:	%{major}.%{patchlevel}
-Release:	1
+Version:	%{major}%{?patchlevel:.%{patchlevel}}
+Release:	2
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
@@ -29,7 +29,7 @@ Source8:	profile.d-bash
 
 %if 0%{patchlevel}
 # Upstream patches
-%(for i in `seq 1 %{patchlevel}`; do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{major}-patches/bash`echo %{major} |sed -e 's,\\.,,g'`-`echo 000$i |rev |cut -b1-3 |rev`; done)
+%(for i in $(seq 1 %{patchlevel}); do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{major}-patches/bash$(echo %{major} |sed -e 's,\\.,,g')-$(echo 000$i |rev |cut -b1-3 |rev); done)
 %endif
 
 Patch1000:	bash-2.02-security.patch
