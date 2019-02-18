@@ -1,6 +1,6 @@
 %define i18ndate 20010626
 %define patchlevel 0
-%define major 5.0
+%define major 5
 %define beta %{nil}
 
 # Bash is our default /bin/sh
@@ -8,13 +8,13 @@
 
 Name:		bash
 %if "%{beta}" != ""
-Version:	%{major}
+Version:	%{major}.%{patchlevel}
 Release:	0.%{beta}.1
-Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{major}-%{beta}.tar.gz
+Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
-Version:	%{major}%{?patchlevel:.%{patchlevel}}
+Version:	%{major}.%{patchlevel}
 Release:	2
-Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
+Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{version}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
@@ -29,7 +29,7 @@ Source8:	profile.d-bash
 
 %if 0%{patchlevel}
 # Upstream patches
-%(for i in $(seq 1 %{patchlevel}); do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{major}-patches/bash$(echo %{major} |sed -e 's,\\.,,g')-$(echo 000$i |rev |cut -b1-3 |rev); done)
+%(for i in $(seq 1 %{patchlevel}); do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{version}-patches/bash$(echo %{version} |sed -e 's,\\.,,g')-$(echo 000$i |rev |cut -b1-3 |rev); done)
 %endif
 
 Patch1000:	bash-2.02-security.patch
@@ -99,7 +99,7 @@ This package provides documentation for GNU Bourne Again shell (bash).
 %if "%{beta}" != ""
 %setup -qn %{name}-%{version}-%{beta}
 %else
-%setup -q -n %{name}-%{major}
+%setup -q
 %endif
 mv doc/README .
 
