@@ -1,6 +1,6 @@
 %define i18ndate 20010626
 %define patchlevel 2
-%define major 5
+%define major 5.0
 %define beta %{nil}
 
 # Bash is our default /bin/sh
@@ -8,13 +8,13 @@
 
 Name:		bash
 %if "%{beta}" != ""
-Version:	%{major}.%{patchlevel}
+Version:	%{major}
 Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
 Release:	1
-Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{version}.tar.gz
+Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
@@ -99,7 +99,7 @@ This package provides documentation for GNU Bourne Again shell (bash).
 %if "%{beta}" != ""
 %setup -qn %{name}-%{version}-%{beta}
 %else
-%setup -q
+%setup -q -n %{name}-%{major}
 %endif
 mv doc/README .
 
