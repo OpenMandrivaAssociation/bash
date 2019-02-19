@@ -29,7 +29,7 @@ Source8:	profile.d-bash
 
 %if 0%{patchlevel}
 # Upstream patches
-%(for i in $(seq 1 %{patchlevel}); do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{version}-patches/bash$(echo %{version} |sed -e 's,\\.,,g')-$(echo 000$i |rev |cut -b1-3 |rev); done)
+%(for i in $(seq 1 %{patchlevel}); do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{major}-patches/bash$(echo %{major} |sed -e 's,\\.,,g')-$(echo 000$i |rev |cut -b1-3 |rev); done)
 %endif
 
 Patch1000:	bash-2.02-security.patch
