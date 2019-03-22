@@ -97,9 +97,9 @@ This package provides documentation for GNU Bourne Again shell (bash).
 
 %prep
 %if "%{beta}" != ""
-%setup -qn %{name}-%{version}-%{beta}
+%autosetup -n %{name}-%{version}-%{beta}
 %else
-%setup -q -n %{name}-%{major}
+%autosetup -n %{name}-%{major}
 %endif
 mv doc/README .
 
@@ -275,7 +275,7 @@ cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
 
 %files -n bashbug
 %{_bindir}/bashbug
-%{_mandir}/man1/bashbug.1* 
+%{_mandir}/man1/bashbug.1*
 
 %files doc -f man.pages.filelist
 %dir %{_docdir}/%{name}
