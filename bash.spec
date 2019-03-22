@@ -1,5 +1,5 @@
 %define i18ndate 20010626
-%define patchlevel 2
+%define patchlevel 3
 %define major 5.0
 %define beta %{nil}
 
