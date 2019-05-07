@@ -8,6 +8,14 @@
 # /etc/profile.d/ to make custom changes to environment. This will
 # prevent need for merging in future updates.
 
+# unlimited bash history
+export HISTSIZE=
+export HISTFILESIZE=
+# history with time
+export HISTTIMEFORMAT="[%F %T] "
+export HISTCONTROL=ignoreboth:erasedups
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
 # By default, we want this to get set.
 # Even for non-interactive, non-login shells.
 if [ "`id -gn`" = "`id -un`" -a `id -u` -gt 99 ]; then
