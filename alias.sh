@@ -61,6 +61,7 @@ alias dmesg="dmesg --ctime --color"
 
 # Size of a directory (by default Human Readable).
 alias du='du -h'
+alias dd='dd status=progress'
 
 # Size of a disk (by default Human Readable).
 # and don't probe supermount
