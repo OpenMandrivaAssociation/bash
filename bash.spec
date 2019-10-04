@@ -1,7 +1,9 @@
 %define i18ndate 20010626
-%define patchlevel 3
+%define patchlevel 11
 %define major 5.0
 %define beta %{nil}
+
+%global optflags %{optflags} -Oz
 
 # Bash is our default /bin/sh
 %bcond_without bin_sh
@@ -13,7 +15,7 @@ Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
-Release:	2
+Release:	3
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
