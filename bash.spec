@@ -162,7 +162,7 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
     --enable-progcomp \
     --enable-arith-for-command
 
-%make_build
+%make_build -j2
 
 # all tests must pass
 %check
