@@ -1,0 +1,44 @@
+diff -up bash-5.0/aclocal.m4.omv~ bash-5.0/aclocal.m4
+--- bash-5.0/aclocal.m4.omv~	2019-10-09 16:44:47.279154310 +0200
++++ bash-5.0/aclocal.m4	2019-10-09 16:45:51.881276121 +0200
+@@ -1827,8 +1827,8 @@ eval ac_cv_rl_includedir=${ac_cv_rl_pref
+ eval ac_cv_rl_libdir=${ac_cv_rl_prefix}/lib
+ 
+ LIBS="$LIBS -lreadline ${TERMCAP_LIB}"
+-CFLAGS="$CFLAGS -I${ac_cv_rl_includedir}"
+-LDFLAGS="$LDFLAGS -L${ac_cv_rl_libdir}"
++[ "${ac_cv_rl_prefix}" != "/usr" ] && CFLAGS="$CFLAGS -I${ac_cv_rl_includedir}"
++[ "${ac_cv_rl_prefix}" != "/usr" ] && LDFLAGS="$LDFLAGS -L${ac_cv_rl_libdir}"
+ 
+ AC_CACHE_VAL(ac_cv_rl_version,
+ [AC_TRY_RUN([
+diff -up bash-5.0/Makefile.in.omv~ bash-5.0/Makefile.in
+--- bash-5.0/Makefile.in.omv~	2019-10-09 16:50:15.266772802 +0200
++++ bash-5.0/Makefile.in	2019-10-09 16:51:32.847919129 +0200
+@@ -249,7 +249,7 @@ RL_INCLUDEDIR = @RL_INCLUDEDIR@
+ 
+ READLINE_LIB = @READLINE_LIB@
+ READLINE_LIBRARY = $(RL_LIBDIR)/libreadline.a
+-READLINE_LDFLAGS = -L${RL_LIBDIR}
++#READLINE_LDFLAGS = -L${RL_LIBDIR}
+ READLINE_DEP = @READLINE_DEP@
+ 
+ # The source, object and documentation of the GNU Readline library.
+@@ -301,7 +301,7 @@ HIST_ABSSRC = ${topdir}/$(HIST_LIBDIR)
+ 
+ HISTORY_LIB = @HISTORY_LIB@
+ HISTORY_LIBRARY = $(HIST_LIBDIR)/libhistory.a
+-HISTORY_LDFLAGS = -L$(HIST_LIBDIR)
++#HISTORY_LDFLAGS = -L$(HIST_LIBDIR)
+ HISTORY_DEP = @HISTORY_DEP@
+ 
+ # The source, object and documentation of the history library.
+@@ -320,7 +320,7 @@ TERM_ABSSRC = ${topdir}/$(TERM_LIBDIR)
+ 
+ TERMCAP_LIB = @TERMCAP_LIB@
+ TERMCAP_LIBRARY = $(TERM_LIBDIR)/libtermcap.a
+-TERMCAP_LDFLAGS = -L$(TERM_LIBDIR)
++#TERMCAP_LDFLAGS = -L$(TERM_LIBDIR)
+ TERMCAP_DEP = @TERMCAP_DEP@
+ 
+ TERMCAP_SOURCE	= $(TERM_LIBSRC)/termcap.c $(TERM_LIBSRC)/tparam.c

@@ -48,6 +48,7 @@ Patch1007:	bash-3.2-lzma-copmpletion.patch
 Patch1009:	bash-requires.patch
 Patch1010:	bash-ru-ua-l10n.patch
 Patch1011:	bash-5.0-no-internal-libc.patch
+Patch1012:	bash-5.0-no-Lusrlib.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	groff
@@ -123,6 +124,7 @@ mv doc/README .
 # Needs porting to 4.3
 #patch1010 -p1 -b .ruua
 %patch1011 -p1 -b .libc~
+%patch1012 -p1 -b .Lusrlib~
 
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
