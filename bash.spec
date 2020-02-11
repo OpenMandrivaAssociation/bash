@@ -1,5 +1,5 @@
 %define i18ndate 20010626
-%define patchlevel 11
+%define patchlevel 16
 %define major 5.0
 %define beta %{nil}
 
@@ -15,7 +15,7 @@ Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
-Release:	3
+Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
