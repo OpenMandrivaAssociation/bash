@@ -8,10 +8,10 @@ if [ "$PS1" ]  && [ -n "$BASH" ]; then
 # HISTCONTROL=ignoredups
 
     if [ "$HISTCONTROL" = "ignorespace" ] ; then
-	export HISTCONTROL=ignoreboth
+       [ -z "$HISTCONTROL" ] && export HISTCONTROL=ignoreboth:erasedups
     else
-	export HISTCONTROL=ignoredups
-    fi
+       [ -z "$HISTCONTROL" ] && export HISTCONTROL=ignoredups
+    fi  
 
 # automatically correct the info on window size
 # do not do autocompletion on empty line
