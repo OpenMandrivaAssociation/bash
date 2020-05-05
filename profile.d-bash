@@ -1,6 +1,6 @@
 # Special nice features for bash
 
-if [ "$PS1" ]  && [ -n "$BASH" ]; then
+if [ "$PS1" ] && [ -n "$BASH" ]; then
 # automatically save the history after each command
     PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
@@ -8,10 +8,10 @@ if [ "$PS1" ]  && [ -n "$BASH" ]; then
 # HISTCONTROL=ignoredups
 
     if [ "$HISTCONTROL" = "ignorespace" ] ; then
-       [ -z "$HISTCONTROL" ] && export HISTCONTROL=ignoreboth:erasedups
+	[ -z "$HISTCONTROL" ] && export HISTCONTROL=ignoreboth:erasedups
     else
-       [ -z "$HISTCONTROL" ] && export HISTCONTROL=ignoredups
-    fi  
+	[ -z "$HISTCONTROL" ] && export HISTCONTROL=ignoredups
+    fi
 
 # automatically correct the info on window size
 # do not do autocompletion on empty line

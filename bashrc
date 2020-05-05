@@ -18,7 +18,7 @@ PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 # By default, we want this to get set.
 # Even for non-interactive, non-login shells.
-if [ "`id -gn`" = "`id -un`" -a `id -u` -gt 99 ]; then
+if [ "$(id -gn)" = "$(id -un)" ] && [ "$(id -u)" -gt 99 ]; then
     umask 002
 else
     umask 022
