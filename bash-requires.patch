@@ -1,17 +1,19 @@
-diff -up bash-5.0-alpha/builtins.h.requires~ bash-5.0-alpha/builtins.h
---- bash-5.0-alpha/builtins.h.requires~	2018-06-18 03:26:30.700386488 +0200
-+++ bash-5.0-alpha/builtins.h	2018-06-18 13:46:55.086335266 +0200
+diff --git a/builtins.h b/builtins.h
+index dac95fd..5b7e811 100644
+--- a/builtins.h
++++ b/builtins.h
 @@ -45,6 +45,7 @@
  #define ASSIGNMENT_BUILTIN 0x10	/* This builtin takes assignment statements. */
  #define POSIX_BUILTIN	0x20	/* This builtins is special in the Posix command search order. */
  #define LOCALVAR_BUILTIN   0x40	/* This builtin creates local variables */
-+#define REQUIRES_BUILTIN   0x80 /* RPM requires detector */
++#define REQUIRES_BUILTIN 0x80  /* This builtin requires other files. */
  
  #define BASE_INDENT	4
  
-diff -up bash-5.0-alpha/builtins/mkbuiltins.c.requires~ bash-5.0-alpha/builtins/mkbuiltins.c
---- bash-5.0-alpha/builtins/mkbuiltins.c.requires~	2016-01-25 19:29:03.000000000 +0100
-+++ bash-5.0-alpha/builtins/mkbuiltins.c	2018-06-18 13:48:25.454330286 +0200
+diff --git a/builtins/mkbuiltins.c b/builtins/mkbuiltins.c
+index 4f51201..91c25db 100644
+--- a/builtins/mkbuiltins.c
++++ b/builtins/mkbuiltins.c
 @@ -69,10 +69,15 @@ extern char *strcpy ();
  #define whitespace(c) (((c) == ' ') || ((c) == '\t'))
  
@@ -24,7 +26,7 @@ diff -up bash-5.0-alpha/builtins/mkbuiltins.c.requires~ bash-5.0-alpha/builtins/
  #define BUILTIN_FLAG_ASSIGNMENT 0x02
  #define BUILTIN_FLAG_LOCALVAR	0x04
  #define BUILTIN_FLAG_POSIX_BUILTIN 0x08
-+#define BUILTIN_FLAG_REQUIRES	0x10
++#define BUILTIN_FLAG_REQUIRES  0x10
  
  #define BASE_INDENT	4
  
@@ -33,7 +35,7 @@ diff -up bash-5.0-alpha/builtins/mkbuiltins.c.requires~ bash-5.0-alpha/builtins/
  };
  
 +/* The builtin commands that cause requirements on other files. */
-+static const char *requires_builtins[] =
++static char *requires_builtins[] =
 +{
 +  ".", "command", "exec", "source", "inlib",
 +  (char *)NULL
@@ -57,7 +59,7 @@ diff -up bash-5.0-alpha/builtins/mkbuiltins.c.requires~ bash-5.0-alpha/builtins/
  
    array_add ((char *)new, defs->builtins);
    building_builtin = 1;
-@@ -1250,12 +1265,13 @@ write_builtins (defs, structfile, extern
+@@ -1250,12 +1265,13 @@ write_builtins (defs, structfile, externfile)
  		  else
  		    fprintf (structfile, "(sh_builtin_func_t *)0x0, ");
  
@@ -86,15 +88,16 @@ diff -up bash-5.0-alpha/builtins/mkbuiltins.c.requires~ bash-5.0-alpha/builtins/
  #if !defined (HAVE_RENAME)
  static int
  rename (from, to)
-diff -up bash-5.0-alpha/doc/bash.1.requires~ bash-5.0-alpha/doc/bash.1
---- bash-5.0-alpha/doc/bash.1.requires~	2018-06-18 03:26:30.701386488 +0200
-+++ bash-5.0-alpha/doc/bash.1	2018-06-18 13:49:04.850328115 +0200
+diff --git a/doc/bash.1 b/doc/bash.1
+index d91f1fd..111a66d 100644
+--- a/doc/bash.1
++++ b/doc/bash.1
 @@ -239,6 +239,14 @@ The shell becomes restricted (see
  .B "RESTRICTED SHELL"
  below).
  .TP
 +.B \-\-rpm-requires
-+Produce the list of files that are required for the 
++Produce the list of files that are required for the
 +shell script to run.  This implies '-n' and is subject
 +to the same limitations as compile time error checking checking;
 +Command substitutions, Conditional expressions and
@@ -104,15 +107,16 @@ diff -up bash-5.0-alpha/doc/bash.1.requires~ bash-5.0-alpha/doc/bash.1
  .B \-\-verbose
  Equivalent to \fB\-v\fP.
  .TP
-diff -up bash-5.0-alpha/doc/bashref.texi.requires~ bash-5.0-alpha/doc/bashref.texi
---- bash-5.0-alpha/doc/bashref.texi.requires~	2018-05-08 14:49:45.000000000 +0200
-+++ bash-5.0-alpha/doc/bashref.texi	2018-06-18 03:26:30.702386488 +0200
-@@ -6393,6 +6393,13 @@ standard.  @xref{Bash POSIX Mode}, for a
+diff --git a/doc/bashref.texi b/doc/bashref.texi
+index d33cd57..6fc4d18 100644
+--- a/doc/bashref.texi
++++ b/doc/bashref.texi
+@@ -6453,6 +6453,13 @@ standard.  @xref{Bash POSIX Mode}, for a description of the Bash
  @item --restricted
  Make the shell a restricted shell (@pxref{The Restricted Shell}).
  
 +@item --rpm-requires
-+Produce the list of files that are required for the 
++Produce the list of files that are required for the
 +shell script to run.  This implies '-n' and is subject
 +to the same limitations as compile time error checking checking;
 +Command substitutions, Conditional expressions and @command{eval}
@@ -121,31 +125,25 @@ diff -up bash-5.0-alpha/doc/bashref.texi.requires~ bash-5.0-alpha/doc/bashref.te
  @item --verbose
  Equivalent to @option{-v}.  Print shell input lines as they're read.
  
-diff -up bash-5.0-alpha/eval.c.requires~ bash-5.0-alpha/eval.c
---- bash-5.0-alpha/eval.c.requires~	2018-02-12 00:40:12.000000000 +0100
-+++ bash-5.0-alpha/eval.c	2018-06-18 13:46:20.766337157 +0200
-@@ -52,6 +52,8 @@
- extern sigset_t top_level_mask;
- #endif
- 
-+extern int rpm_requires;
-+
- static void send_pwd_to_eterm __P((void));
- static sighandler alrm_catcher __P((int));
- 
-@@ -139,7 +141,7 @@ reader_loop ()
+diff --git a/eval.c b/eval.c
+index f02d6e4..76c1e8d 100644
+--- a/eval.c
++++ b/eval.c
+@@ -142,7 +142,8 @@ reader_loop ()
  
        if (read_command () == 0)
  	{
 -	  if (interactive_shell == 0 && read_but_dont_execute)
++
 +	  if (interactive_shell == 0 && (read_but_dont_execute && !rpm_requires))
  	    {
  	      last_command_exit_value = EXECUTION_SUCCESS;
  	      dispose_command (global_command);
-diff -up bash-5.0-alpha/execute_cmd.c.requires~ bash-5.0-alpha/execute_cmd.c
---- bash-5.0-alpha/execute_cmd.c.requires~	2018-05-10 16:16:21.000000000 +0200
-+++ bash-5.0-alpha/execute_cmd.c	2018-06-18 03:26:30.703386488 +0200
-@@ -538,6 +538,8 @@ async_redirect_stdin ()
+diff --git a/execute_cmd.c b/execute_cmd.c
+index 8b3c83a..4eae19c 100644
+--- a/execute_cmd.c
++++ b/execute_cmd.c
+@@ -542,6 +542,8 @@ async_redirect_stdin ()
  
  #define DESCRIBE_PID(pid) do { if (interactive) describe_pid (pid); } while (0)
  
@@ -154,7 +152,7 @@ diff -up bash-5.0-alpha/execute_cmd.c.requires~ bash-5.0-alpha/execute_cmd.c
  /* Execute the command passed in COMMAND, perhaps doing it asynchronously.
     COMMAND is exactly what read_command () places into GLOBAL_COMMAND.
     ASYNCHROUNOUS, if non-zero, says to do this command in the background.
-@@ -569,7 +571,13 @@ execute_command_internal (command, async
+@@ -573,7 +575,13 @@ execute_command_internal (command, asynchronous, pipe_in, pipe_out,
  
    if (breaking || continuing)
      return (last_command_exit_value);
@@ -164,50 +162,48 @@ diff -up bash-5.0-alpha/execute_cmd.c.requires~ bash-5.0-alpha/execute_cmd.c
 +  if (rpm_requires && command->type == cm_function_def)
 +    return last_command_exit_value =
 +      execute_intern_function (command->value.Function_def->name,
-+                               command->value.Function_def->command);
++                              command->value.Function_def);
 +  if (read_but_dont_execute)
      return (EXECUTION_SUCCESS);
  
    QUIT;
-@@ -5783,7 +5791,7 @@ execute_intern_function (name, funcdef)
- 
-   if (check_identifier (name, posixly_correct) == 0)
+@@ -2819,7 +2827,7 @@ execute_for_command (for_command)
+   save_line_number = line_number;
+   if (check_identifier (for_command->name, 1) == 0)
      {
 -      if (posixly_correct && interactive_shell == 0)
 +      if (posixly_correct && interactive_shell == 0 && rpm_requires == 0)
  	{
  	  last_command_exit_value = EX_BADUSAGE;
  	  jump_to_top_level (ERREXIT);
-diff -up bash-5.0-alpha/execute_cmd.h.requires~ bash-5.0-alpha/execute_cmd.h
---- bash-5.0-alpha/execute_cmd.h.requires~	2018-06-18 03:26:30.703386488 +0200
-+++ bash-5.0-alpha/execute_cmd.h	2018-06-18 13:45:53.901338637 +0200
-@@ -22,6 +22,8 @@
+diff --git a/execute_cmd.h b/execute_cmd.h
+index dc2f15e..506fff4 100644
+--- a/execute_cmd.h
++++ b/execute_cmd.h
+@@ -22,6 +22,9 @@
  #define _EXECUTE_CMD_H_
  
  #include "stdc.h"
 +#include "variables.h"
 +#include "command.h"
++
  
  #if defined (ARRAY_VARS)
  struct func_array_state
-diff -up bash-5.0-alpha/make_cmd.c.requires~ bash-5.0-alpha/make_cmd.c
---- bash-5.0-alpha/make_cmd.c.requires~	2018-01-04 21:31:38.000000000 +0100
-+++ bash-5.0-alpha/make_cmd.c	2018-06-18 13:45:16.614340692 +0200
-@@ -46,7 +46,13 @@
+diff --git a/make_cmd.c b/make_cmd.c
+index ecbbfd6..3d8bfa4 100644
+--- a/make_cmd.c
++++ b/make_cmd.c
+@@ -35,6 +35,8 @@
+ #include "bashintl.h"
  
- #include "shmbutil.h"
- 
+ #include "shell.h"
 +#include "builtins.h"
 +#include "builtins/common.h"
-+
- int here_doc_first_line = 0;
-+extern int rpm_requires;
-+static const char *alphabet_set = "abcdefghijklmnopqrstuvwxyz"
-+	"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
- 
- /* Object caching */
- sh_obj_cache_t wdcache = {0, 0, 0};
-@@ -828,6 +834,27 @@ make_coproc_command (name, command)
+ #include "execute_cmd.h"
+ #include "parser.h"
+ #include "flags.h"
+@@ -828,6 +830,30 @@ make_coproc_command (name, command)
    return (make_command (cm_coproc, (SIMPLE_COM *)temp));
  }
  
@@ -216,12 +212,15 @@ diff -up bash-5.0-alpha/make_cmd.c.requires~ bash-5.0-alpha/make_cmd.c
 +const char *deptype;
 +char *filename;
 +{
++  static char *alphabet_set = "abcdefghijklmnopqrstuvwxyz"
++                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
++
 +  if (strchr(filename, '$') || (filename[0] != '/' && strchr(filename, '/')))
 +    return;
 +
-+  /* 
++  /*
 +      if the executable is called via variable substitution we can
-+      not dermine what it is at compile time.  
++      not dermine what it is at compile time.
 +
 +      if the executable consists only of characters not in the
 +      alphabet we do not consider it a dependency just an artifact
@@ -235,7 +234,7 @@ diff -up bash-5.0-alpha/make_cmd.c.requires~ bash-5.0-alpha/make_cmd.c
  /* Reverse the word list and redirection list in the simple command
     has just been parsed.  It seems simpler to do this here the one
     time then by any other method that I can think of. */
-@@ -845,6 +872,27 @@ clean_simple_command (command)
+@@ -845,6 +871,28 @@ clean_simple_command (command)
  	REVERSE_LIST (command->value.Simple->redirects, REDIRECT *);
      }
  
@@ -260,12 +259,14 @@ diff -up bash-5.0-alpha/make_cmd.c.requires~ bash-5.0-alpha/make_cmd.c
 +      }
 +    } /*rpm_requires*/
 +
++
    parser_state &= ~PST_REDIRLIST;
    return (command);
  }
-diff -up bash-5.0-alpha/shell.c.requires~ bash-5.0-alpha/shell.c
---- bash-5.0-alpha/shell.c.requires~	2018-02-16 20:28:18.000000000 +0100
-+++ bash-5.0-alpha/shell.c	2018-06-18 03:32:08.445367877 +0200
+diff --git a/shell.c b/shell.c
+index a2b2a55..c5d99b3 100644
+--- a/shell.c
++++ b/shell.c
 @@ -193,6 +193,9 @@ int have_devfd = 0;
  /* The name of the .(shell)rc file. */
  static char *bashrc_file = DEFAULT_BASHRC;
@@ -297,3 +298,15 @@ diff -up bash-5.0-alpha/shell.c.requires~ bash-5.0-alpha/shell.c
    if (running_setuid && privileged_mode == 0)
      disable_priv_mode ();
  
+diff --git a/shell.h b/shell.h
+index 8072605..6c4149d 100644
+--- a/shell.h
++++ b/shell.h
+@@ -99,6 +99,7 @@ extern int interactive, interactive_shell;
+ extern int startup_state;
+ extern int reading_shell_script;
+ extern int shell_initialized;
++extern int rpm_requires;
+ extern int bash_argv_initialized;
+ extern int subshell_environment;
+ extern int current_command_number;
