@@ -135,13 +135,10 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 cp -a %{_datadir}/libtool/config/* .
 cp -a %{_datadir}/libtool/config/* support/
 
-# (tpg) disable this for now
-%if 0
 # (tpg) remove built-in libraries
 rm -rf lib/{readline,termcap}/*
 touch lib/{readline,termcap}/Makefile.in # for config.status
 sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
-%endif
 
 %configure \
     --enable-command-timing \
