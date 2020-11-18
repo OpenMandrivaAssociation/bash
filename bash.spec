@@ -147,7 +147,7 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
     --enable-job-control \
     --enable-multibyte \
     --enable-readline \
-    --with-installed-readline \
+    --with-installed-readline="/%{_lib}" \
     --without-gnu-malloc \
     --without-bash-malloc \
     --disable-strict-posix-default \
