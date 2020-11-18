@@ -15,7 +15,7 @@ Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
-Release:	1
+Release:	2
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
@@ -108,7 +108,7 @@ mv doc/README .
 
 %if 0%{patchlevel}
 # Upstream patches
-%(for i in `seq 1 %{patchlevel}`; do echo %%patch$i -p0; done)
+%(for i in $(seq 1 %{patchlevel}); do echo %%patch$i -p0; done)
 %endif
 
 %patch1000 -p1 -b .security
@@ -135,10 +135,13 @@ export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 cp -a %{_datadir}/libtool/config/* .
 cp -a %{_datadir}/libtool/config/* support/
 
+# (tpg) disable this for now
+%if 0
 # (tpg) remove built-in libraries
 rm -rf lib/{readline,termcap}/*
 touch lib/{readline,termcap}/Makefile.in # for config.status
 sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
+%endif
 
 %configure \
     --enable-command-timing \
