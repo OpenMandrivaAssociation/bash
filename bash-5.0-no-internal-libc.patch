@@ -1,6 +1,6 @@
-diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.in
---- bash-5.0-alpha/lib/sh/Makefile.in.omv~	2018-06-18 21:38:26.938776264 +0200
-+++ bash-5.0-alpha/lib/sh/Makefile.in	2018-06-18 21:42:23.205763245 +0200
+diff -up bash-5.1/lib/sh/Makefile.in.libc~ bash-5.1/lib/sh/Makefile.in
+--- bash-5.1/lib/sh/Makefile.in.libc~	2020-06-04 19:15:56.000000000 +0200
++++ bash-5.1/lib/sh/Makefile.in	2020-12-07 22:33:11.160930958 +0100
 @@ -81,14 +81,13 @@ GCC_LINT_FLAGS = -Wall -Wshadow -Wpointe
  LIBRARY_NAME = libsh.a
  
@@ -21,7 +21,7 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  	   mktime.c strftime.c mbschr.c zcatfd.c zmapfd.c winsize.c eaccess.c \
  	   wcsdup.c fpurge.c zgetline.c mbscmp.c uconvert.c ufuncs.c \
  	   casemod.c dprintf.c input_avail.c mbscasecmp.c fnxform.c \
-@@ -99,11 +98,11 @@ HSOURCES =
+@@ -100,11 +99,11 @@ HSOURCES =
  
  # The object files contained in $(LIBRARY_NAME)
  LIBOBJS = @LIBOBJS@
@@ -35,16 +35,16 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  	  fmtullong.o fmtumax.o zcatfd.o zmapfd.o winsize.o wcsdup.o \
  	  fpurge.o zgetline.o mbscmp.o uconvert.o ufuncs.o casemod.o \
  	  input_avail.o mbscasecmp.o fnxform.o unicode.o shmbchar.o \
-@@ -152,8 +151,6 @@ fmtulong.o: fmtulong.c
+@@ -153,8 +152,6 @@ fmtulong.o: fmtulong.c
  fmtumax.o: fmtumax.c
  fnxform.o: fnxform.c
  fpurge.o: fpurge.c
 -getcwd.o: getcwd.c
 -getenv.o: getenv.c
+ gettimeofday.o: gettimeofday.c
  inet_aton.o: inet_aton.c
  input_avail.o: input_avail.c
- itos.o: itos.c
-@@ -162,7 +159,6 @@ makepath.o: makepath.c
+@@ -164,7 +161,6 @@ makepath.o: makepath.c
  mbscasecmp.o: mbscasecmp.c
  mbschr.o: mbschr.c
  mbscmp.o: mbscmp.c
@@ -52,7 +52,7 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  mktime.o: mktime.c
  netconn.o: netconn.c
  netopen.o: netopen.c
-@@ -175,23 +171,12 @@ shmatch.o: shmatch.c
+@@ -178,23 +174,12 @@ shmatch.o: shmatch.c
  shmbchar.o: shmbchar.c
  shquote.o: shquote.c
  shtty.o: shtty.c
@@ -76,7 +76,7 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  strtoumax.o: strtoumax.c
  strtrans.o: strtrans.c
  times.o: times.c
-@@ -214,9 +199,6 @@ zwrite.o: zwrite.c
+@@ -218,9 +203,6 @@ zwrite.o: zwrite.c
  # dependencies for c files that include other c files
  fmtullong.o: fmtulong.c
  fmtumax.o: fmtulong.c
@@ -86,16 +86,16 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  
  # all files in the library depend on config.h
  casemod.o: ${BUILD_DIR}/config.h
-@@ -229,8 +211,6 @@ fmtulong.o: ${BUILD_DIR}/config.h
+@@ -233,8 +215,6 @@ fmtulong.o: ${BUILD_DIR}/config.h
  fmtumax.o: ${BUILD_DIR}/config.h
  fnxform.o: ${BUILD_DIR}/config.h
  fpurge.o: ${BUILD_DIR}/config.h
 -getcwd.o: ${BUILD_DIR}/config.h
 -getenv.o: ${BUILD_DIR}/config.h
+ gettimeofday.o: ${BUILD_DIR}/config.h
  inet_aton.o: ${BUILD_DIR}/config.h
  input_avail.o: ${BUILD_DIR}/config.h
- itos.o: ${BUILD_DIR}/config.h
-@@ -239,7 +219,6 @@ makepath.o: ${BUILD_DIR}/config.h
+@@ -244,7 +224,6 @@ makepath.o: ${BUILD_DIR}/config.h
  mbscasecmp.o: ${BUILD_DIR}/config.h
  mbschr.o: ${BUILD_DIR}/config.h
  mbscmp.o: ${BUILD_DIR}/config.h
@@ -103,7 +103,7 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  mktime.o: ${BUILD_DIR}/config.h
  netconn.o: ${BUILD_DIR}/config.h
  netopen.o: ${BUILD_DIR}/config.h
-@@ -252,23 +231,12 @@ shmatch.o: ${BUILD_DIR}/config.h
+@@ -258,23 +237,12 @@ shmatch.o: ${BUILD_DIR}/config.h
  shmbchar.o: ${BUILD_DIR}/config.h
  shquote.o: ${BUILD_DIR}/config.h
  shtty.o: ${BUILD_DIR}/config.h
@@ -127,7 +127,7 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  strtoumax.o: ${BUILD_DIR}/config.h
  strtrans.o: ${BUILD_DIR}/config.h
  times.o: ${BUILD_DIR}/config.h
-@@ -290,20 +258,6 @@ zwrite.o: ${BUILD_DIR}/config.h
+@@ -297,20 +265,6 @@ zwrite.o: ${BUILD_DIR}/config.h
  
  clktck.o: ${topdir}/bashtypes.h
  
@@ -148,7 +148,7 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  inet_aton.o: ${topdir}/bashansi.h ${BASHINCDIR}/ansi_stdlib.h
  inet_aton.o: ${BASHINCDIR}/stdc.h
  
-@@ -414,31 +368,10 @@ shquote.o: ${BASHINCDIR}/shmbutil.h ${BA
+@@ -425,31 +379,10 @@ shquote.o: ${BASHINCDIR}/shmbutil.h ${BA
  shtty.o: ${BASHINCDIR}/shtty.h
  shtty.o: ${BASHINCDIR}/stdc.h
  
@@ -180,7 +180,7 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  stringlist.o: ${topdir}/bashansi.h
  stringlist.o: ${topdir}/shell.h ${topdir}/syntax.h ${topdir}/bashjmp.h ${BASHINCDIR}/posixjmp.h
  stringlist.o: ${topdir}/command.h ${BASHINCDIR}/stdc.h ${topdir}/error.h
-@@ -459,31 +392,8 @@ stringvec.o: ${topdir}/make_cmd.h ${topd
+@@ -470,31 +403,8 @@ stringvec.o: ${topdir}/make_cmd.h ${topd
  stringvec.o: ${BUILD_DIR}/pathnames.h ${topdir}/externs.h
  #stringvec.o: ${BUILD_DIR}/version.h
  
@@ -212,4 +212,3 @@ diff -up bash-5.0-alpha/lib/sh/Makefile.in.omv~ bash-5.0-alpha/lib/sh/Makefile.i
  strtoumax.o: ${BASHINCDIR}/stdc.h
  
  strtrans.o: ${topdir}/bashansi.h
-diff -up bash-5.0-alpha/lib/sh/snprintf.c.omv~ bash-5.0-alpha/lib/sh/snprintf.c

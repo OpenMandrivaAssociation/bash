@@ -1,6 +1,5 @@
-%define i18ndate 20010626
-%define patchlevel 18
-%define major 5.0
+%define patchlevel 0
+%define major 5.1
 %define beta %{nil}
 
 %global optflags %{optflags} -Oz
@@ -15,7 +14,7 @@ Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
 Version:	%{major}.%{patchlevel}
-Release:	2
+Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Summary:	The GNU Bourne Again shell (bash)
@@ -164,7 +163,13 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
     --enable-progcomp \
     --enable-arith-for-command
 
-%make_build
+# We get rlbmutil.h from system readline
+sed -i -e '/rlmbutil.h/d' Makefile
+
+if ! %make_build; then
+	# Probably caused by too many parallel bits, let's try again
+	make
+fi
 
 # all tests must pass
 %check
