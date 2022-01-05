@@ -1,5 +1,5 @@
-%define patchlevel 8
-%define major 5.1
+#define patchlevel 0
+%define major 5.1.16
 %define beta %{nil}
 
 %global optflags %{optflags} -Oz
@@ -13,7 +13,7 @@ Version:	%{major}
 Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
-Version:	%{major}.%{patchlevel}
+Version:	%{major}%{?patchlevel:.%{patchlevel}}
 Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
@@ -28,7 +28,7 @@ Source6:	alias.sh
 Source7:	bashrc
 Source8:	profile.d-bash
 
-%if 0%{patchlevel}
+%if 0%{?patchlevel:%{patchlevel}}
 # Upstream patches
 %(for i in $(seq 1 %{patchlevel}); do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{major}-patches/bash$(echo %{major} |sed -e 's,\.,,g')-$(echo 000$i |rev |cut -b1-3 |rev); done)
 %endif
@@ -105,7 +105,7 @@ This package provides documentation for GNU Bourne Again shell (bash).
 %endif
 mv doc/README .
 
-%if 0%{patchlevel}
+%if 0%{?patchlevel:%{patchlevel}}
 # Upstream patches
 %(for i in $(seq 1 %{patchlevel}); do echo %%patch$i -p0; done)
 %endif
