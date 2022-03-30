@@ -7,6 +7,7 @@
 # Bash is our default /bin/sh
 %bcond_without bin_sh
 
+Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
 %if "%{beta}" != ""
 Version:	%{major}
@@ -14,10 +15,9 @@ Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
 Version:	%{major}%{?patchlevel:.%{patchlevel}}
-Release:	1
+Release:	2
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
-Summary:	The GNU Bourne Again shell (bash)
 Group:		Shells
 License:	GPLv2+
 URL:		http://www.gnu.org/software/bash/bash.html
@@ -54,9 +54,7 @@ BuildRequires:	groff
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	texinfo
 BuildRequires:	pkgconfig(readline)
-Conflicts:	etcskel <= 1.63-11mdk
-Conflicts:	fileutils < 4.1-5mdk
-Conflicts:	setup < 2.7.4-1mdv
+Requires:	filesystem
 # explicit file provides
 %if %{with bin_sh}
 Provides:	/bin/sh
@@ -80,7 +78,6 @@ Tools standard.
 %package -n bashbug
 Summary:	Report a bug in bash
 Group:		Shells
-Conflicts:	bash < 4.4.19-1
 
 %description -n bashbug
 bashbug is a shell script to help the user compose and mail bug reports
@@ -89,7 +86,7 @@ concerning bash in a standard format.
 %package doc
 Summary:	Documentation for the GNU Bourne Again shell (bash)
 Group:		Books/Computer books
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name} = %{EVRD}
 Obsoletes:	bash3-doc < 3.2.48
 Provides:	bash3-doc = %{EVRD}
 Conflicts:	bash < 4.4.19-1
@@ -167,8 +164,8 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
 sed -i -e '/rlmbutil.h/d' Makefile
 
 if ! %make_build; then
-	# Probably caused by too many parallel bits, let's try again
-	make
+# Probably caused by too many parallel bits, let's try again
+    make
 fi
 
 # all tests must pass
@@ -271,6 +268,43 @@ install -m 644 README COMPAT NEWS NOTES POSIX CHANGES \
 cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
     %{buildroot}%{_docdir}/%{name}
 
+# post is in lua so that we can run it without any external deps.  Helps
+# for bootstrapping a new install.
+# Jesse Keating 2009-01-29 (code from Ignacio Vazquez-Abrams)
+# Roman Rakus 2011-11-07 (code from Sergey Romanov) #740611
+%post -p <lua>
+nl = '\n'
+sh = '/bin/sh'..nl
+bash = '/bin/bash'..nl
+f = io.open('/etc/shells', 'a+')
+if f then
+    local shells = nl..f:read('*all')..nl
+    if not shells:find(nl..sh) then f:write(sh) end
+    if not shells:find(nl..bash) then f:write(bash) end
+    f:close()
+end
+
+%postun -p <lua>
+-- Run it only if we are uninstalling
+if arg[2] == 0
+then
+    t={}
+    for line in io.lines("/etc/shells")
+    do
+	if line ~= "/bin/bash" and line ~= "/bin/sh"
+	then
+	    table.insert(t,line)
+	end
+    end
+
+    f = io.open("/etc/shells", "w+")
+    for n,line in pairs(t)
+    do
+	f:write(line.."\n")
+    end
+    f:close()
+end
+
 %files -f %{name}.lang
 %config(noreplace) %{_sysconfdir}/skel/.b*
 %{_sysconfdir}/profile.d/60alias.sh
@@ -284,7 +318,7 @@ cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
 
 %files -n bashbug
 %{_bindir}/bashbug
-%{_mandir}/man1/bashbug.1*
+%doc %{_mandir}/man1/bashbug.1*
 
 %files doc -f man.pages.filelist
 %dir %{_docdir}/%{name}
