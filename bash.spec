@@ -15,7 +15,7 @@ Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
 Version:	%{major}%{?patchlevel:.%{patchlevel}}
-Release:	2
+Release:	3
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Group:		Shells
@@ -58,6 +58,7 @@ Requires:	filesystem
 # explicit file provides
 %if %{with bin_sh}
 Provides:	/bin/sh
+Provides:	/bin/bash
 %endif
 Suggests:	bash-doc
 Suggests:	bashbug
@@ -143,7 +144,7 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
     --enable-job-control \
     --enable-multibyte \
     --enable-readline \
-    --with-installed-readline="/%{_lib}" \
+    --with-installed-readline="%{_libdir}" \
     --without-gnu-malloc \
     --without-bash-malloc \
     --disable-strict-posix-default \
@@ -193,10 +194,12 @@ for i in $(/bin/ls doc/) ; \
     done
 rmdir tmp_doc
 
-mkdir -p %{buildroot}/bin
-( cd %{buildroot} && mv usr/bin/bash bin/bash )
+
 %if %{with bin_sh}
-( cd %{buildroot}/bin && ln -s bash sh )
+mkdir -p %{buildroot}/bin
+ln -s %{_bindir}/bash %{buildroot}/bin/sh
+ln -s %{_bindir}/bash %{buildroot}/bin/bash
+ln -s %{_bindir}/bash %{buildroot}%{_bindir}/sh
 %endif
 
 # make builtins.1 and rbash.1 with bash.1 in place (fix mdv#51379)
@@ -251,7 +254,7 @@ install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/profile.d/60alias.sh
 install -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/bashrc
 install -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/profile.d/95bash-extras.sh
 
-ln -s bash %{buildroot}/bin/rbash
+ln -s %{_bindir}/bash %{buildroot}/bin/rbash
 
 install -m 644 bash.info %{buildroot}%{_infodir}
 )
@@ -275,7 +278,7 @@ cp -pr examples doc/*.ps doc/*.0 doc/*.html doc/article.txt \
 %post -p <lua>
 nl = '\n'
 sh = '/bin/sh'..nl
-bash = '/bin/bash'..nl
+bash = '/usr/bin/bash'..nl
 f = io.open('/etc/shells', 'a+')
 if f then
     local shells = nl..f:read('*all')..nl
@@ -291,7 +294,7 @@ then
     t={}
     for line in io.lines("/etc/shells")
     do
-	if line ~= "/bin/bash" and line ~= "/bin/sh"
+	if line ~= "/usr/bin/bash" and line ~= "/bin/sh"
 	then
 	    table.insert(t,line)
 	end
@@ -311,9 +314,11 @@ end
 %{_sysconfdir}/profile.d/95bash-extras.sh
 %config(noreplace) %{_sysconfdir}/bashrc
 /bin/rbash
-/bin/bash
+%{_bindir}/bash
 %if %{with bin_sh}
 /bin/sh
+/bin/bash
+%{_bindir}/sh
 %endif
 
 %files -n bashbug
