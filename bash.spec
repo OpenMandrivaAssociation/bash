@@ -1,6 +1,6 @@
 #define patchlevel 0
-%define major 5.1.16
-%define beta %{nil}
+%define major 5.2
+%define beta rc1
 
 %global optflags %{optflags} -Oz
 
@@ -15,7 +15,7 @@ Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %else
 Version:	%{major}%{?patchlevel:.%{patchlevel}}
-Release:	3
+Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %endif
 Group:		Shells
@@ -59,6 +59,8 @@ Requires:	filesystem
 %if %{with bin_sh}
 Provides:	/bin/sh
 Provides:	/bin/bash
+Provides:	/usr/bin/sh
+Provides:	/usr/bin/bash
 %endif
 Suggests:	bash-doc
 Suggests:	bashbug
@@ -191,14 +193,11 @@ for i in $(/bin/ls doc/) ; \
     do cat doc/$i > tmp_doc/$i ; \
     cat tmp_doc/$i | perl -p -e 's/.//g' > doc/$i ; \
     rm tmp_doc/$i ; \
-    done
+done
 rmdir tmp_doc
 
 
 %if %{with bin_sh}
-mkdir -p %{buildroot}/bin
-ln -s %{_bindir}/bash %{buildroot}/bin/sh
-ln -s %{_bindir}/bash %{buildroot}/bin/bash
 ln -s %{_bindir}/bash %{buildroot}%{_bindir}/sh
 %endif
 
@@ -254,7 +253,7 @@ install -m 644 %{SOURCE6} %{buildroot}%{_sysconfdir}/profile.d/60alias.sh
 install -m 644 %{SOURCE7} %{buildroot}%{_sysconfdir}/bashrc
 install -m 644 %{SOURCE8} %{buildroot}%{_sysconfdir}/profile.d/95bash-extras.sh
 
-ln -s %{_bindir}/bash %{buildroot}/bin/rbash
+ln -s bash %{buildroot}%{_bindir}/rbash
 
 install -m 644 bash.info %{buildroot}%{_infodir}
 )
@@ -313,11 +312,9 @@ end
 %{_sysconfdir}/profile.d/60alias.sh
 %{_sysconfdir}/profile.d/95bash-extras.sh
 %config(noreplace) %{_sysconfdir}/bashrc
-/bin/rbash
+%{_bindir}/rbash
 %{_bindir}/bash
 %if %{with bin_sh}
-/bin/sh
-/bin/bash
 %{_bindir}/sh
 %endif
 

@@ -1,7 +1,7 @@
-diff -up bash-5.0/aclocal.m4.omv~ bash-5.0/aclocal.m4
---- bash-5.0/aclocal.m4.omv~	2019-10-09 16:44:47.279154310 +0200
-+++ bash-5.0/aclocal.m4	2019-10-09 16:45:51.881276121 +0200
-@@ -1827,8 +1827,8 @@ eval ac_cv_rl_includedir=${ac_cv_rl_pref
+diff -up bash-5.2-rc1/aclocal.m4.Lusrlib~ bash-5.2-rc1/aclocal.m4
+--- bash-5.2-rc1/aclocal.m4.Lusrlib~	2022-06-19 03:22:13.032336556 +0200
++++ bash-5.2-rc1/aclocal.m4	2022-06-19 03:22:47.030539572 +0200
+@@ -1892,8 +1892,8 @@ eval ac_cv_rl_includedir=${ac_cv_rl_pref
  eval ac_cv_rl_libdir=${ac_cv_rl_prefix}/lib
  
  LIBS="$LIBS -lreadline ${TERMCAP_LIB}"
@@ -11,11 +11,11 @@ diff -up bash-5.0/aclocal.m4.omv~ bash-5.0/aclocal.m4
 +[ "${ac_cv_rl_prefix}" != "/usr" ] && LDFLAGS="$LDFLAGS -L${ac_cv_rl_libdir}"
  
  AC_CACHE_VAL(ac_cv_rl_version,
- [AC_TRY_RUN([
-diff -up bash-5.0/Makefile.in.omv~ bash-5.0/Makefile.in
---- bash-5.0/Makefile.in.omv~	2019-10-09 16:50:15.266772802 +0200
-+++ bash-5.0/Makefile.in	2019-10-09 16:51:32.847919129 +0200
-@@ -249,7 +249,7 @@ RL_INCLUDEDIR = @RL_INCLUDEDIR@
+ [AC_RUN_IFELSE([AC_LANG_SOURCE([[
+diff -up bash-5.2-rc1/Makefile.in.Lusrlib~ bash-5.2-rc1/Makefile.in
+--- bash-5.2-rc1/Makefile.in.Lusrlib~	2022-05-02 22:47:06.000000000 +0200
++++ bash-5.2-rc1/Makefile.in	2022-06-19 03:22:13.033336562 +0200
+@@ -257,7 +257,7 @@ RL_INCLUDEDIR = @RL_INCLUDEDIR@
  
  READLINE_LIB = @READLINE_LIB@
  READLINE_LIBRARY = $(RL_LIBDIR)/libreadline.a
@@ -24,7 +24,7 @@ diff -up bash-5.0/Makefile.in.omv~ bash-5.0/Makefile.in
  READLINE_DEP = @READLINE_DEP@
  
  # The source, object and documentation of the GNU Readline library.
-@@ -301,7 +301,7 @@ HIST_ABSSRC = ${topdir}/$(HIST_LIBDIR)
+@@ -309,7 +309,7 @@ HIST_ABSSRC = ${topdir}/$(HIST_LIBDIR)
  
  HISTORY_LIB = @HISTORY_LIB@
  HISTORY_LIBRARY = $(HIST_LIBDIR)/libhistory.a
@@ -33,7 +33,7 @@ diff -up bash-5.0/Makefile.in.omv~ bash-5.0/Makefile.in
  HISTORY_DEP = @HISTORY_DEP@
  
  # The source, object and documentation of the history library.
-@@ -320,7 +320,7 @@ TERM_ABSSRC = ${topdir}/$(TERM_LIBDIR)
+@@ -328,7 +328,7 @@ TERM_ABSSRC = ${topdir}/$(TERM_LIBDIR)
  
  TERMCAP_LIB = @TERMCAP_LIB@
  TERMCAP_LIBRARY = $(TERM_LIBDIR)/libtermcap.a

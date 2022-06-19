@@ -1,9 +1,10 @@
---- bash-4.3/parse.y.extended_quote	2014-03-03 02:38:42.353339171 +0100
-+++ bash-4.3/parse.y	2014-03-03 02:39:13.796565916 +0100
-@@ -3435,7 +3435,7 @@ parse_matched_pair (qc, open, close, len
- 		      free (ttrans);
+diff -up bash-5.2-rc1/parse.y.extended_quote bash-5.2-rc1/parse.y
+--- bash-5.2-rc1/parse.y.extended_quote	2022-06-19 03:07:53.037188368 +0200
++++ bash-5.2-rc1/parse.y	2022-06-19 03:10:24.689099047 +0200
+@@ -3835,7 +3835,7 @@ parse_matched_pair (qc, open, close, len
  		      nestlen = strlen (nestret);
  		    }
+ #endif
 -		  else if ((rflags & P_DQUOTE) == 0)
 +		  else if (extended_quote || (rflags & P_DQUOTE) == 0)
  		    {
