@@ -258,15 +258,6 @@ ln -s bash %{buildroot}%{_bindir}/rbash
 install -m 644 bash.info %{buildroot}%{_infodir}
 )
 
-# In preparation for usrmerge (while there are hundreds of things
-# hardcoding /bin/bash and /bin/sh), move everything to /bin and just
-# drop /usr/bin/* -- the filesystem transition package should handle
-# the rest
-mkdir -p %{buildroot}/bin
-mv %{buildroot}%{_bindir}/{bash,rbash,sh} %{buildroot}/bin/
-# Make sure the /bin/sh symlink points at /bin/bash and not /usr/bin/bash
-ln -sf bash %{buildroot}/bin/sh
-
 %find_lang %{name}
 
 # merges list
@@ -321,10 +312,10 @@ end
 %{_sysconfdir}/profile.d/60alias.sh
 %{_sysconfdir}/profile.d/95bash-extras.sh
 %config(noreplace) %{_sysconfdir}/bashrc
-/bin/rbash
-/bin/bash
+%{_bindir}/rbash
+%{_bindir}/bash
 %if %{with bin_sh}
-/bin/sh
+%{_bindir}/sh
 %endif
 
 %files -n bashbug
