@@ -1,0 +1,12 @@
+diff -up bash-5.2-rc2/print_cmd.c.omv~ bash-5.2-rc2/print_cmd.c
+--- bash-5.2-rc2/print_cmd.c.omv~	2022-07-30 22:39:51.694661029 +0200
++++ bash-5.2-rc2/print_cmd.c	2022-07-30 22:40:23.165893952 +0200
+@@ -304,7 +304,7 @@ make_command_string_internal (command)
+ 		if (deferred_heredocs == 0)
+ 		  {
+ 		    if (was_heredoc == 0)
+-		      cprintf (s);		/* inside_function_def? */
++		      cprintf ("%s", s);		/* inside_function_def? */
+ 		    else
+ 		      was_heredoc = 0;
+ 		  }

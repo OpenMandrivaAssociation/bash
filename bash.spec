@@ -1,6 +1,6 @@
 #define patchlevel 0
 %define major 5.2
-%define beta rc1
+%define beta rc2
 
 %global optflags %{optflags} -Oz
 
@@ -48,6 +48,7 @@ Patch1009:	bash-requires.patch
 Patch1010:	bash-ru-ua-l10n.patch
 Patch1011:	bash-5.0-no-internal-libc.patch
 Patch1012:	bash-5.0-no-Lusrlib.patch
+Patch1013:	bash-5.2-rc2-formatstring.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	groff
@@ -124,6 +125,7 @@ mv doc/README .
 #patch1010 -p1 -b .ruua
 %patch1011 -p1 -b .libc~
 %patch1012 -p1 -b .Lusrlib~
+%patch1013 -p1 -b .formatstring~
 
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
