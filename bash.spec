@@ -1,6 +1,6 @@
 #define patchlevel 0
 %define major 5.2
-%define beta rc3
+%define beta rc4
 
 %global optflags %{optflags} -Oz
 
