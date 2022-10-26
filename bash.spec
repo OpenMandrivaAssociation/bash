@@ -1,4 +1,4 @@
-#define patchlevel 0
+%define patchlevel 2
 %define major 5.2
 %define beta %{nil}
 
