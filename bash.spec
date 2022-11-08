@@ -1,5 +1,5 @@
-%define patchlevel 2
-%define major 5.2
+%define patchlevel %(echo %{version} |cut -d. -f3)
+%define major %(echo %{version} |cut -d. -f1-2)
 %define beta %{nil}
 
 %global optflags %{optflags} -Oz
@@ -9,14 +9,13 @@
 
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
-%if "%{beta}" != ""
-Version:	5.2
-Release:	0.%{beta}.1
-Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
-%else
-Version:	5.2%{?patchlevel:.%{patchlevel}}
+Version:	5.2.9
+%if "%{beta}" == ""
 Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
+%else
+Release:	0.%{beta}.1
+Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %endif
 Group:		Shells
 License:	GPLv2+
