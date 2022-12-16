@@ -9,7 +9,7 @@
 
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
-Version:	5.2.9
+Version:	5.2.15
 %if "%{beta}" == ""
 Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
