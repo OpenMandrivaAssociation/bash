@@ -2,7 +2,8 @@
 %define major %(echo %{version} |cut -d. -f1-2)
 %define beta %{nil}
 
-%global optflags %{optflags} -Oz
+%global optflags %{optflags} -Oz -fPIC -fno-semantic-interposition -fdata-sections -ffunction-sections -fvisibility=hidden -fvisibility-inlines-hidden
+%global build_ldflags %{build_ldflags} -Wl,--gc-sections -WL,-Bsymbolic -Wl,-Bsymbolic-functions
 
 # Bash is our default /bin/sh
 %bcond_without bin_sh
@@ -53,6 +54,8 @@ BuildRequires:	groff
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	texinfo
 BuildRequires:	pkgconfig(readline)
+BuildRequires:	glibc-static-devel
+
 Requires:	filesystem
 # explicit file provides
 %if %{with bin_sh}
@@ -146,8 +149,11 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
     --enable-multibyte \
     --enable-readline \
     --with-installed-readline="%{_libdir}" \
+    --with-curses \
     --without-gnu-malloc \
     --without-bash-malloc \
+    --enable-mem-scramble \
+    --enable-threads=posix \
     --disable-strict-posix-default \
     --enable-select \
     --enable-prompt-string-decoding \
@@ -160,7 +166,8 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
     --enable-cond-command \
     --enable-extended-glob \
     --enable-progcomp \
-    --enable-arith-for-command
+    --enable-arith-for-command \
+    --enable-static-link
 
 # We get rlbmutil.h from system readline
 sed -i -e '/rlmbutil.h/d' Makefile
@@ -195,7 +202,6 @@ for i in $(/bin/ls doc/) ; \
 done
 rmdir tmp_doc
 
-
 %if %{with bin_sh}
 ln -s %{_bindir}/bash %{buildroot}%{_bindir}/sh
 %endif
@@ -210,6 +216,7 @@ soelim builtins.1 > ../builtins.1
 sed -e '/^.if \\n(zY=1 .ig zY/,/^.zY/d' ../bash.1 > bash.1
 soelim rbash.1    > ../rbash.1
 )
+rm -rf doc/tmp_fix_so
 
 # make manpages for bash builtins as per suggestion in DOC/README
 (cd doc
@@ -224,6 +231,8 @@ b
 d
 ' builtins.1 | tr -s ' ' '\n' | grep -v -E '^(printf|export|echo|pwd|test|true|false|kill)$' > man.pages
 # tr is needed because there are few commands in a row separated with a whilespace
+# echo,export,kill,printf,pwd,test -- these files are provided by other packages
+
 install -m 644 builtins.1 %{buildroot}%{_mandir}/man1/builtins.1
 install -m 644 bash.1 %{buildroot}%{_mandir}/man1/bash.1
 install -m 644 rbash.1 %{buildroot}%{_mandir}/man1/rbash.1
@@ -258,9 +267,6 @@ install -m 644 bash.info %{buildroot}%{_infodir}
 )
 
 %find_lang %{name}
-
-# merges list
-cat  %{name}.lang > files.list
 
 # install documentation manually in expected place
 install -d -m 755 %{buildroot}%{_docdir}/%{name}
