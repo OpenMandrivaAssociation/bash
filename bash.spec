@@ -9,12 +9,12 @@
 
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
-Version:	5.2.15
+Version:	5.2.21
 %if "%{beta}" == ""
-Release:	2
+Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
 %else
-Release:	0.%{beta}.1
+Release:	0.%{beta}1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %endif
 Group:		Shells
