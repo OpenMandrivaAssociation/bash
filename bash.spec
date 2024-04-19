@@ -9,7 +9,7 @@
 
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
-Version:	5.2.21
+Version:	5.2.26
 %if "%{beta}" == ""
 Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
@@ -44,7 +44,6 @@ Patch1005:	bash-strcoll-bug.diff
 Patch1007:	bash-3.2-lzma-copmpletion.patch
 # (proyvind): 4.2-5 add --rpm-requires option (Fedora) (mdvbz#61712)
 Patch1009:	bash-requires.patch
-Patch1010:	bash-ru-ua-l10n.patch
 Patch1011:	bash-5.0-no-internal-libc.patch
 Patch1012:	bash-5.0-no-Lusrlib.patch
 BuildRequires:	autoconf
@@ -98,31 +97,14 @@ This package provides documentation for GNU Bourne Again shell (bash).
 
 %prep
 %if "%{beta}" != ""
-%setup -qn %{name}-%{version}-%{beta}
+%setup -q -n %{name}-%{version}-%{beta}
 %else
-%setup -qn %{name}-%{major}
+%setup -q -n %{name}-%{major}
 %endif
 mv doc/README .
 
-%if 0%{?patchlevel:%{patchlevel}}
-# Upstream patches
-%(for i in $(seq 1 %{patchlevel}); do echo %%patch$i -p0; done)
-%endif
-
-%patch1000 -p1 -b .security
-%patch1001 -p1 -b .profile
-# 20060126 warly obsolete exept maybe for the replacement of @ by kH, this will have to be checked
-#%patch1002 -p1 -b .readline
-%patch1003 -p1 -b .compat
-%patch1004 -p1 -b .extended_quote
-%patch1005 -p1 -b .strcoll_bugx
-%patch1007 -p1 -b .lzma
-%patch1009 -p1 -b .requires~
-# bash-ru-ua-l10n.patch
-# Needs porting to 4.3
-#patch1010 -p1 -b .ruua
-%patch1011 -p1 -b .libc~
-%patch1012 -p1 -b .Lusrlib~
+%autopatch -p0 -M 999
+%autopatch -p1 -m 1000
 
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
