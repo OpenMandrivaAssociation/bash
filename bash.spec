@@ -19,7 +19,7 @@ Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %endif
 Group:		Shells
 License:	GPLv2+
-URL:		http://www.gnu.org/software/bash/bash.html
+URL:		https://www.gnu.org/software/bash/bash.html
 Source3:	dot-bashrc
 Source4:	dot-bash_profile
 Source5:	dot-bash_logout
