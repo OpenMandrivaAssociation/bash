@@ -48,7 +48,7 @@ Patch1011:	bash-5.0-no-internal-libc.patch
 Patch1012:	bash-5.0-no-Lusrlib.patch
 BuildRequires:	autoconf
 BuildRequires:	bison
-BuildRequires:	gettext
+BuildRequires:	gettext locales-extra-charsets
 BuildRequires:	groff
 BuildRequires:	pkgconfig(ncursesw)
 BuildRequires:	texinfo
