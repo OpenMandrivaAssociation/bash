@@ -1,8 +1,18 @@
-diff -up bash-5.2-rc1/builtins.h.requires~ bash-5.2-rc1/builtins.h
-diff -up bash-5.2-rc1/builtins/mkbuiltins.c.requires~ bash-5.2-rc1/builtins/mkbuiltins.c
---- bash-5.2-rc1/builtins/mkbuiltins.c.requires~	2022-06-19 03:10:57.082293338 +0200
-+++ bash-5.2-rc1/builtins/mkbuiltins.c	2022-06-19 03:14:15.765483629 +0200
-@@ -68,12 +68,17 @@ extern char *strcpy ();
+diff -up bash-5.3/builtins.h.7~ bash-5.3/builtins.h
+--- bash-5.3/builtins.h.7~	2021-11-05 14:10:35.000000000 +0100
++++ bash-5.3/builtins.h	2025-07-05 17:44:03.604985262 +0200
+@@ -46,6 +46,7 @@
+ #define POSIX_BUILTIN	0x20	/* This builtins is special in the Posix command search order. */
+ #define LOCALVAR_BUILTIN   0x40	/* This builtin creates local variables */
+ #define ARRAYREF_BUILTIN 0x80	/* This builtin takes array references as arguments */
++#define REQUIRES_BUILTIN 0x100  /* rpm dependency generator */
+ 
+ #define BASE_INDENT	4
+ 
+diff -up bash-5.3/builtins/mkbuiltins.c.7~ bash-5.3/builtins/mkbuiltins.c
+--- bash-5.3/builtins/mkbuiltins.c.7~	2025-06-25 21:49:26.000000000 +0200
++++ bash-5.3/builtins/mkbuiltins.c	2025-07-05 17:47:22.393624340 +0200
+@@ -61,12 +61,17 @@ static void *xrealloc (void *, size_t);
  #define savestring(x) strcpy (xmalloc (1 + strlen (x)), (x))
  #define whitespace(c) (((c) == ' ') || ((c) == '\t'))
  
@@ -20,10 +30,11 @@ diff -up bash-5.2-rc1/builtins/mkbuiltins.c.requires~ bash-5.2-rc1/builtins/mkbu
  
  #define BASE_INDENT	4
  
-@@ -189,6 +194,13 @@ char *arrayvar_builtins[] =
+@@ -183,13 +188,21 @@ char *arrayvar_builtins[] =
    "typeset", "unset", "wait",		/*]*/
    (char *)NULL
  };
+-	
 +
 +/* The builtin commands that cause requirements on other files. */
 +static const char *requires_builtins[] =
@@ -31,18 +42,18 @@ diff -up bash-5.2-rc1/builtins/mkbuiltins.c.requires~ bash-5.2-rc1/builtins/mkbu
 +  ".", "command", "exec", "source", "inlib",
 +  (char *)NULL
 +};
- 	
++
  /* Forward declarations. */
- static int is_special_builtin ();
-@@ -196,6 +208,7 @@ static int is_assignment_builtin ();
- static int is_localvar_builtin ();
- static int is_posix_builtin ();
- static int is_arrayvar_builtin ();
-+static int is_requires_builtin ();
+ static int is_special_builtin (char *);
+ static int is_assignment_builtin (char *);
+ static int is_localvar_builtin (char *);
+ static int is_posix_builtin (char *);
+ static int is_arrayvar_builtin (char *);
++static int is_requires_builtin (char *);
  
  #if !defined (HAVE_RENAME)
- static int rename ();
-@@ -856,6 +869,8 @@ builtin_handler (self, defs, arg)
+ static int rename (char *, char *);
+@@ -826,6 +839,8 @@ builtin_handler (char *self, DEF_FILE *d
      new->flags |= BUILTIN_FLAG_POSIX_BUILTIN;
    if (is_arrayvar_builtin (name))
      new->flags |= BUILTIN_FLAG_ARRAYREF_ARG;
@@ -51,7 +62,7 @@ diff -up bash-5.2-rc1/builtins/mkbuiltins.c.requires~ bash-5.2-rc1/builtins/mkbu
  
    array_add ((char *)new, defs->builtins);
    building_builtin = 1;
-@@ -1275,13 +1290,14 @@ write_builtins (defs, structfile, extern
+@@ -1212,13 +1227,14 @@ write_builtins (DEF_FILE *defs, FILE *st
  		  else
  		    fprintf (structfile, "(sh_builtin_func_t *)0x0, ");
  
@@ -67,24 +78,23 @@ diff -up bash-5.2-rc1/builtins/mkbuiltins.c.requires~ bash-5.2-rc1/builtins/mkbu
  		    document_name (builtin));
  
  		  /* Don't translate short document summaries that are identical
-@@ -1678,6 +1694,13 @@ is_arrayvar_builtin (name)
+@@ -1597,6 +1613,12 @@ is_arrayvar_builtin (char *name)
    return (_find_in_table (name, arrayvar_builtins));
  }
  
 +static int
-+is_requires_builtin (name)
-+     char *name;
++is_requires_builtin (char *name)
 +{
 +  return (_find_in_table (name, requires_builtins));
 +}
 +
  #if !defined (HAVE_RENAME)
  static int
- rename (from, to)
-diff -up bash-5.2-rc1/doc/bash.1.requires~ bash-5.2-rc1/doc/bash.1
---- bash-5.2-rc1/doc/bash.1.requires~	2022-06-03 16:47:45.000000000 +0200
-+++ bash-5.2-rc1/doc/bash.1	2022-06-19 03:10:57.083293344 +0200
-@@ -239,6 +239,14 @@ The shell becomes restricted (see
+ rename (char *from, char *to)
+diff -up bash-5.3/doc/bash.1.7~ bash-5.3/doc/bash.1
+--- bash-5.3/doc/bash.1.7~	2025-04-30 15:04:32.000000000 +0200
++++ bash-5.3/doc/bash.1	2025-07-05 17:44:03.587073117 +0200
+@@ -276,6 +276,14 @@ The shell becomes restricted (see
  .B "RESTRICTED SHELL"
  below).
  .TP
@@ -99,11 +109,11 @@ diff -up bash-5.2-rc1/doc/bash.1.requires~ bash-5.2-rc1/doc/bash.1
  .B \-\-verbose
  Equivalent to \fB\-v\fP.
  .TP
-diff -up bash-5.2-rc1/doc/bashref.texi.requires~ bash-5.2-rc1/doc/bashref.texi
---- bash-5.2-rc1/doc/bashref.texi.requires~	2022-06-03 16:46:51.000000000 +0200
-+++ bash-5.2-rc1/doc/bashref.texi	2022-06-19 03:10:57.084293350 +0200
-@@ -6921,6 +6921,13 @@ standard.  @xref{Bash POSIX Mode}, for a
- @item --restricted
+diff -up bash-5.3/doc/bashref.texi.7~ bash-5.3/doc/bashref.texi
+--- bash-5.3/doc/bashref.texi.7~	2025-05-27 17:56:19.000000000 +0200
++++ bash-5.3/doc/bashref.texi	2025-07-05 17:47:59.928952167 +0200
+@@ -7812,6 +7812,13 @@ standard.
+ Equivalent to @option{-r}.
  Make the shell a restricted shell (@pxref{The Restricted Shell}).
  
 +@item --rpm-requires
@@ -114,12 +124,12 @@ diff -up bash-5.2-rc1/doc/bashref.texi.requires~ bash-5.2-rc1/doc/bashref.texi
 +are not parsed so some dependencies may be missed.
 +
  @item --verbose
- Equivalent to @option{-v}.  Print shell input lines as they're read.
- 
-diff -up bash-5.2-rc1/eval.c.requires~ bash-5.2-rc1/eval.c
---- bash-5.2-rc1/eval.c.requires~	2022-06-19 03:10:57.084293350 +0200
-+++ bash-5.2-rc1/eval.c	2022-06-19 03:15:19.513865126 +0200
-@@ -138,7 +138,7 @@ reader_loop ()
+ Equivalent to @option{-v}.
+ Print shell input lines as they're read.
+diff -up bash-5.3/eval.c.7~ bash-5.3/eval.c
+--- bash-5.3/eval.c.7~	2025-03-08 00:50:03.000000000 +0100
++++ bash-5.3/eval.c	2025-07-05 17:44:03.602013353 +0200
+@@ -146,7 +146,7 @@ reader_loop (void)
  
        if (read_command () == 0)
  	{
@@ -128,10 +138,10 @@ diff -up bash-5.2-rc1/eval.c.requires~ bash-5.2-rc1/eval.c
  	    {
  	      set_exit_status (last_command_exit_value);
  	      dispose_command (global_command);
-diff -up bash-5.2-rc1/execute_cmd.c.requires~ bash-5.2-rc1/execute_cmd.c
---- bash-5.2-rc1/execute_cmd.c.requires~	2022-05-25 23:42:17.000000000 +0200
-+++ bash-5.2-rc1/execute_cmd.c	2022-06-19 03:17:51.180772141 +0200
-@@ -557,6 +557,8 @@ async_redirect_stdin ()
+diff -up bash-5.3/execute_cmd.c.7~ bash-5.3/execute_cmd.c
+--- bash-5.3/execute_cmd.c.7~	2025-06-05 17:02:01.000000000 +0200
++++ bash-5.3/execute_cmd.c	2025-07-05 17:49:21.016412132 +0200
+@@ -608,6 +608,8 @@ async_redirect_stdin (void)
  
  #define DESCRIBE_PID(pid) do { if (interactive) describe_pid (pid); } while (0)
  
@@ -140,7 +150,7 @@ diff -up bash-5.2-rc1/execute_cmd.c.requires~ bash-5.2-rc1/execute_cmd.c
  /* Execute the command passed in COMMAND, perhaps doing it asynchronously.
     COMMAND is exactly what read_command () places into GLOBAL_COMMAND.
     ASYNCHRONOUS, if non-zero, says to do this command in the background.
-@@ -588,6 +590,10 @@ execute_command_internal (command, async
+@@ -634,6 +636,10 @@ execute_command_internal (COMMAND *comma
  
    if (breaking || continuing)
      return (last_command_exit_value);
@@ -151,18 +161,18 @@ diff -up bash-5.2-rc1/execute_cmd.c.requires~ bash-5.2-rc1/execute_cmd.c
    if (read_but_dont_execute)
      return (last_command_exit_value);
    if (command == 0)
-@@ -2878,7 +2884,7 @@ execute_for_command (for_command)
-   save_line_number = line_number;
+@@ -3003,7 +3009,7 @@ execute_for_command (FOR_COM *for_comman
    if (check_identifier (for_command->name, 1) == 0)
      {
+       line_number = save_line_number;
 -      if (posixly_correct && interactive_shell == 0)
 +      if (posixly_correct && interactive_shell == 0 && rpm_requires == 0)
  	{
  	  last_command_exit_value = EX_BADUSAGE;
  	  jump_to_top_level (ERREXIT);
-diff -up bash-5.2-rc1/execute_cmd.h.requires~ bash-5.2-rc1/execute_cmd.h
---- bash-5.2-rc1/execute_cmd.h.requires~	2020-03-03 17:39:04.000000000 +0100
-+++ bash-5.2-rc1/execute_cmd.h	2022-06-19 03:10:57.085293356 +0200
+diff -up bash-5.3/execute_cmd.h.7~ bash-5.3/execute_cmd.h
+--- bash-5.3/execute_cmd.h.7~	2024-05-06 22:02:43.000000000 +0200
++++ bash-5.3/execute_cmd.h	2025-07-05 17:44:03.603474826 +0200
 @@ -22,6 +22,9 @@
  #define _EXECUTE_CMD_H_
  
@@ -173,9 +183,9 @@ diff -up bash-5.2-rc1/execute_cmd.h.requires~ bash-5.2-rc1/execute_cmd.h
  
  #if defined (ARRAY_VARS)
  struct func_array_state
-diff -up bash-5.2-rc1/make_cmd.c.requires~ bash-5.2-rc1/make_cmd.c
---- bash-5.2-rc1/make_cmd.c.requires~	2022-03-04 15:51:37.000000000 +0100
-+++ bash-5.2-rc1/make_cmd.c	2022-06-19 03:10:57.085293356 +0200
+diff -up bash-5.3/make_cmd.c.7~ bash-5.3/make_cmd.c
+--- bash-5.3/make_cmd.c.7~	2023-12-05 16:52:24.000000000 +0100
++++ bash-5.3/make_cmd.c	2025-07-05 17:44:03.603700662 +0200
 @@ -35,6 +35,8 @@
  #include "bashintl.h"
  
@@ -185,7 +195,7 @@ diff -up bash-5.2-rc1/make_cmd.c.requires~ bash-5.2-rc1/make_cmd.c
  #include "execute_cmd.h"
  #include "parser.h"
  #include "flags.h"
-@@ -839,6 +841,30 @@ make_coproc_command (name, command)
+@@ -797,6 +799,30 @@ make_coproc_command (char *name, COMMAND
    return (make_command (cm_coproc, (SIMPLE_COM *)temp));
  }
  
@@ -216,7 +226,7 @@ diff -up bash-5.2-rc1/make_cmd.c.requires~ bash-5.2-rc1/make_cmd.c
  /* Reverse the word list and redirection list in the simple command
     has just been parsed.  It seems simpler to do this here the one
     time then by any other method that I can think of. */
-@@ -856,6 +882,28 @@ clean_simple_command (command)
+@@ -813,6 +839,28 @@ clean_simple_command (COMMAND *command)
  	REVERSE_LIST (command->value.Simple->redirects, REDIRECT *);
      }
  
@@ -245,12 +255,12 @@ diff -up bash-5.2-rc1/make_cmd.c.requires~ bash-5.2-rc1/make_cmd.c
    parser_state &= ~PST_REDIRLIST;
    return (command);
  }
-diff -up bash-5.2-rc1/shell.c.requires~ bash-5.2-rc1/shell.c
---- bash-5.2-rc1/shell.c.requires~	2022-03-04 21:13:00.000000000 +0100
-+++ bash-5.2-rc1/shell.c	2022-06-19 03:19:07.830230253 +0200
-@@ -196,6 +196,9 @@ int have_devfd = 0;
- /* The name of the .(shell)rc file. */
- static char *bashrc_file = DEFAULT_BASHRC;
+diff -up bash-5.3/shell.c.7~ bash-5.3/shell.c
+--- bash-5.3/shell.c.7~	2025-03-26 21:40:19.000000000 +0100
++++ bash-5.3/shell.c	2025-07-05 17:49:51.529373141 +0200
+@@ -205,6 +205,9 @@ int have_devfd = 0;
+ /* The name of the .(shell)rc file, DEFAULT_BASHRC is sourced by default */
+ static char *bashrc_file;
  
 +/* Non-zero if we are finding the scripts requirements. */
 +int rpm_requires;
@@ -258,7 +268,7 @@ diff -up bash-5.2-rc1/shell.c.requires~ bash-5.2-rc1/shell.c
  /* Non-zero means to act more like the Bourne shell on startup. */
  static int act_like_sh;
  
-@@ -266,6 +269,7 @@ static const struct {
+@@ -272,6 +275,7 @@ static const struct {
    { "protected", Int, &protected_mode, (char **)0x0 },
  #endif
    { "rcfile", Charp, (int *)0x0, &bashrc_file },
@@ -266,7 +276,7 @@ diff -up bash-5.2-rc1/shell.c.requires~ bash-5.2-rc1/shell.c
  #if defined (RESTRICTED_SHELL)
    { "restricted", Int, &restricted, (char **)0x0 },
  #endif
-@@ -510,6 +514,12 @@ main (argc, argv, env)
+@@ -510,6 +514,12 @@ main (int argc, char **argv, char **env)
      read_but_dont_execute = 1;
  #endif
  
@@ -279,25 +289,14 @@ diff -up bash-5.2-rc1/shell.c.requires~ bash-5.2-rc1/shell.c
    if (running_setuid && privileged_mode == 0)
      disable_priv_mode ();
  
-diff -up bash-5.2-rc1/shell.h.requires~ bash-5.2-rc1/shell.h
---- bash-5.2-rc1/shell.h.requires~	2022-04-18 19:10:57.000000000 +0200
-+++ bash-5.2-rc1/shell.h	2022-06-19 03:10:57.086293362 +0200
-@@ -100,6 +100,7 @@ extern int interactive, interactive_shel
- extern int startup_state;
+diff -up bash-5.3/shell.h.7~ bash-5.3/shell.h
+--- bash-5.3/shell.h.7~	2024-10-26 19:03:04.000000000 +0200
++++ bash-5.3/shell.h	2025-07-05 17:50:11.692469721 +0200
+@@ -105,6 +105,7 @@ extern int startup_state;
  extern int reading_shell_script;
+ extern int ssh_reading_startup_files;
  extern int shell_initialized;
 +extern int rpm_requires;
  extern int bash_argv_initialized;
  extern int subshell_environment;
  extern int current_command_number;
-diff -up bash-5.2-rc1/builtins.h.omv~ bash-5.2-rc1/builtins.h
---- bash-5.2-rc1/builtins.h.omv~	2022-06-19 03:25:03.283352995 +0200
-+++ bash-5.2-rc1/builtins.h	2022-06-19 03:25:25.992488545 +0200
-@@ -46,6 +46,7 @@
- #define POSIX_BUILTIN	0x20	/* This builtins is special in the Posix command search order. */
- #define LOCALVAR_BUILTIN   0x40	/* This builtin creates local variables */
- #define ARRAYREF_BUILTIN 0x80	/* This builtin takes array references as arguments */
-+#define REQUIRES_BUILTIN 0x100  /* rpm dependency generator */
- 
- #define BASE_INDENT	4
- 

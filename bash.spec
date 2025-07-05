@@ -9,7 +9,7 @@
 
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
-Version:	5.2.37
+Version:	5.3
 %if "%{beta}" == ""
 Release:	1
 Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
@@ -108,6 +108,9 @@ mv doc/README .
 
 sed -i -e 's,^#define.*CHECKWINSIZE_DEFAULT.*,#define CHECKWINSIZE_DEFAULT 1,' config-top.h
 
+# Use system readline -- no dependencies on the internal copy
+sed -i -e 's,$.RL_LIBSRC./[a-z]*.h,,g;s,$.HIST_LIBSRC./[a-z]*.h,,g' Makefile.in builtins/Makefile.in
+
 %build
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
@@ -143,9 +146,6 @@ sed -ri -e 's:\$[(](RL|HIST)_LIBSRC[)]/[[:alpha:]]*.h::g' Makefile.in
     --enable-extended-glob \
     --enable-progcomp \
     --enable-arith-for-command
-
-# We get rlbmutil.h from system readline
-sed -i -e '/rlmbutil.h/d' Makefile
 
 if ! %make_build; then
 # Probably caused by too many parallel bits, let's try again

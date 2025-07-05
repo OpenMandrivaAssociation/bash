@@ -1,7 +1,37 @@
-diff -up bash-5.2-rc1/aclocal.m4.Lusrlib~ bash-5.2-rc1/aclocal.m4
---- bash-5.2-rc1/aclocal.m4.Lusrlib~	2022-06-19 03:22:13.032336556 +0200
-+++ bash-5.2-rc1/aclocal.m4	2022-06-19 03:22:47.030539572 +0200
-@@ -1892,8 +1892,8 @@ eval ac_cv_rl_includedir=${ac_cv_rl_pref
+diff -up bash-5.3/Makefile.in.9~ bash-5.3/Makefile.in
+--- bash-5.3/Makefile.in.9~	2025-05-16 20:56:31.000000000 +0200
++++ bash-5.3/Makefile.in	2025-07-05 17:55:26.458814576 +0200
+@@ -282,7 +282,7 @@ RL_INCLUDEDIR = @RL_INCLUDEDIR@
+ 
+ READLINE_LIB = @READLINE_LIB@
+ READLINE_LIBRARY = $(RL_LIBDIR)/libreadline.a
+-READLINE_LDFLAGS = -L${RL_LIBDIR}
++#READLINE_LDFLAGS = -L${RL_LIBDIR}
+ READLINE_DEP = @READLINE_DEP@
+ 
+ # The source, object and documentation of the GNU Readline library.
+@@ -334,7 +334,7 @@ HIST_ABSSRC = ${topdir}/$(HIST_LIBDIR)
+ 
+ HISTORY_LIB = @HISTORY_LIB@
+ HISTORY_LIBRARY = $(HIST_LIBDIR)/libhistory.a
+-HISTORY_LDFLAGS = -L$(HIST_LIBDIR)
++#HISTORY_LDFLAGS = -L$(HIST_LIBDIR)
+ HISTORY_DEP = @HISTORY_DEP@
+ 
+ HIST_INCLUDEDIR = @HIST_INCLUDEDIR@
+@@ -355,7 +355,7 @@ TERM_ABSSRC = ${topdir}/$(TERM_LIBDIR)
+ 
+ TERMCAP_LIB = @TERMCAP_LIB@
+ TERMCAP_LIBRARY = $(TERM_LIBDIR)/libtermcap.a
+-TERMCAP_LDFLAGS = -L$(TERM_LIBDIR)
++#TERMCAP_LDFLAGS = -L$(TERM_LIBDIR)
+ TERMCAP_DEP = @TERMCAP_DEP@
+ 
+ TERMCAP_SOURCE	= $(TERM_LIBSRC)/termcap.c $(TERM_LIBSRC)/tparam.c
+diff -up bash-5.3/aclocal.m4.9~ bash-5.3/aclocal.m4
+--- bash-5.3/aclocal.m4.9~	2025-05-16 18:40:49.000000000 +0200
++++ bash-5.3/aclocal.m4	2025-07-05 17:54:52.765250287 +0200
+@@ -1846,8 +1846,8 @@ eval ac_cv_rl_includedir=${ac_cv_rl_pref
  eval ac_cv_rl_libdir=${ac_cv_rl_prefix}/lib
  
  LIBS="$LIBS -lreadline ${TERMCAP_LIB}"
@@ -12,33 +42,3 @@ diff -up bash-5.2-rc1/aclocal.m4.Lusrlib~ bash-5.2-rc1/aclocal.m4
  
  AC_CACHE_VAL(ac_cv_rl_version,
  [AC_RUN_IFELSE([AC_LANG_SOURCE([[
-diff -up bash-5.2-rc1/Makefile.in.Lusrlib~ bash-5.2-rc1/Makefile.in
---- bash-5.2-rc1/Makefile.in.Lusrlib~	2022-05-02 22:47:06.000000000 +0200
-+++ bash-5.2-rc1/Makefile.in	2022-06-19 03:22:13.033336562 +0200
-@@ -257,7 +257,7 @@ RL_INCLUDEDIR = @RL_INCLUDEDIR@
- 
- READLINE_LIB = @READLINE_LIB@
- READLINE_LIBRARY = $(RL_LIBDIR)/libreadline.a
--READLINE_LDFLAGS = -L${RL_LIBDIR}
-+#READLINE_LDFLAGS = -L${RL_LIBDIR}
- READLINE_DEP = @READLINE_DEP@
- 
- # The source, object and documentation of the GNU Readline library.
-@@ -309,7 +309,7 @@ HIST_ABSSRC = ${topdir}/$(HIST_LIBDIR)
- 
- HISTORY_LIB = @HISTORY_LIB@
- HISTORY_LIBRARY = $(HIST_LIBDIR)/libhistory.a
--HISTORY_LDFLAGS = -L$(HIST_LIBDIR)
-+#HISTORY_LDFLAGS = -L$(HIST_LIBDIR)
- HISTORY_DEP = @HISTORY_DEP@
- 
- # The source, object and documentation of the history library.
-@@ -328,7 +328,7 @@ TERM_ABSSRC = ${topdir}/$(TERM_LIBDIR)
- 
- TERMCAP_LIB = @TERMCAP_LIB@
- TERMCAP_LIBRARY = $(TERM_LIBDIR)/libtermcap.a
--TERMCAP_LDFLAGS = -L$(TERM_LIBDIR)
-+#TERMCAP_LDFLAGS = -L$(TERM_LIBDIR)
- TERMCAP_DEP = @TERMCAP_DEP@
- 
- TERMCAP_SOURCE	= $(TERM_LIBSRC)/termcap.c $(TERM_LIBSRC)/tparam.c
