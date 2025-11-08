@@ -37,7 +37,7 @@ diff -up bash-5.3/builtins/mkbuiltins.c.7~ bash-5.3/builtins/mkbuiltins.c
 -	
 +
 +/* The builtin commands that cause requirements on other files. */
-+static const char *requires_builtins[] =
++static char *requires_builtins[] =
 +{
 +  ".", "command", "exec", "source", "inlib",
 +  (char *)NULL
@@ -195,14 +195,12 @@ diff -up bash-5.3/make_cmd.c.7~ bash-5.3/make_cmd.c
  #include "execute_cmd.h"
  #include "parser.h"
  #include "flags.h"
-@@ -797,6 +799,30 @@ make_coproc_command (char *name, COMMAND
+@@ -797,6 +799,28 @@ make_coproc_command (char *name, COMMAND
    return (make_command (cm_coproc, (SIMPLE_COM *)temp));
  }
  
 +static void
-+output_requirement (deptype, filename)
-+const char *deptype;
-+char *filename;
++output_requirement (const char *deptype, char *filename)
 +{
 +  static char *alphabet_set = "abcdefghijklmnopqrstuvwxyz"
 +                    "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

@@ -2,19 +2,23 @@
 %define major %(echo %{version} |cut -d. -f1-2)
 %define beta %{nil}
 
-%global optflags %{optflags} -Oz
+# We force std=gnu23 to make sure the crosscompiler and
+# the host compiler use the same standard version -- in
+# bash 5.3, `bool` behavior needs to be identical between
+# host and crosscompiler
+%global optflags %{optflags} -Oz -std=gnu23
 
 # Bash is our default /bin/sh
 %bcond_without bin_sh
 
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
-Version:	5.3
+Version:	5.3.3
 %if "%{beta}" == ""
 Release:	1
-Source0:	ftp://ftp.gnu.org/pub/gnu/bash/%{name}-%{major}.tar.gz
+Source0:	https://ftp.gnu.org/gnu/bash/%{name}-%{major}.tar.gz
 %else
-Release:	0.%{beta}1
+Release:	0.%{beta}.1
 Source0:	ftp://ftp.cwru.edu/pub/bash/%{name}-%{version}-%{beta}.tar.gz
 %endif
 Group:		Shells
@@ -29,7 +33,7 @@ Source8:	profile.d-bash
 
 %if 0%{?patchlevel:%{patchlevel}}
 # Upstream patches
-%(for i in $(seq 1 %{patchlevel}); do echo Patch$i: ftp://ftp.gnu.org/pub/gnu/bash/bash-%{major}-patches/bash$(echo %{major} |sed -e 's,\.,,g')-$(echo 000$i |rev |cut -b1-3 |rev); done)
+%(for i in $(seq 1 %{patchlevel}); do echo Patch$i: https://ftp.gnu.org/gnu/bash/bash-%{major}-patches/bash$(echo %{major} |sed -e 's,\.,,g')-$(echo 000$i |rev |cut -b1-3 |rev); done)
 %endif
 
 Patch1000:	bash-2.02-security.patch
