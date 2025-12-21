@@ -50,6 +50,10 @@ Patch1007:	bash-3.2-lzma-copmpletion.patch
 Patch1009:	bash-requires.patch
 Patch1011:	bash-5.0-no-internal-libc.patch
 Patch1012:	bash-5.0-no-Lusrlib.patch
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	autoconf
 BuildRequires:	bison
 BuildRequires:	gettext locales-extra-charsets
