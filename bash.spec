@@ -13,7 +13,7 @@
 
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
-Version:	5.3.3
+Version:	5.3.15
 %if "%{beta}" == ""
 Release:	1
 Source0:	https://ftp.gnu.org/gnu/bash/%{name}-%{major}.tar.gz
@@ -50,9 +50,10 @@ Patch1007:	bash-3.2-lzma-copmpletion.patch
 Patch1009:	bash-requires.patch
 Patch1011:	bash-5.0-no-internal-libc.patch
 Patch1012:	bash-5.0-no-Lusrlib.patch
+Patch1013:	bash-performance-improvements.patch
 BuildRequires:	automake
-BuildRequires:	libtool-base
 BuildRequires:	slibtool
+BuildRequires:	gnu-config
 BuildRequires:	make
 BuildRequires:	autoconf
 BuildRequires:	bison
@@ -124,8 +125,8 @@ sed -i -e 's,$.RL_LIBSRC./[a-z]*.h,,g;s,$.HIST_LIBSRC./[a-z]*.h,,g' Makefile.in 
 export DEBUGGER_START_FILE="%{_datadir}/bashdb/bashdb-main.inc"
 
 # Drag in support for aarch64-* and the likes
-cp -a %{_datadir}/libtool/config/* .
-cp -a %{_datadir}/libtool/config/* support/
+cp -f %{_bindir}/config.{guess,sub} .
+cp -f %{_bindir}/config.{guess,sub} support/
 
 # (tpg) remove built-in libraries
 rm -rf lib/{readline,termcap}/*
