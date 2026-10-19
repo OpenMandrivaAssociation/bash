@@ -13,7 +13,7 @@
 
 Summary:	The GNU Bourne Again shell (bash)
 Name:		bash
-Version:	5.3.15
+Version:	5.3.20
 %if "%{beta}" == ""
 Release:	1
 Source0:	https://ftp.gnu.org/gnu/bash/%{name}-%{major}.tar.gz
@@ -165,6 +165,15 @@ fi
 # all tests must pass
 %check
 make check
+
+%pgo
+cat >mathprofile.sh <<'EOF'
+a=1
+for i in `seq 1 100`; do
+	a=$((a+1))
+done
+EOF
+bash mathprofile.sh
 
 %install
 %make_install
