@@ -5,7 +5,10 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-# Uncomment the following line if you don't like systemctl's auto-paging feature:
-# export SYSTEMD_PAGER=
+# Prompt customization examples:
+#   OM_PROMPT_STYLE=single   # compact one-line prompt
+#   OM_PROMPT_STYLE=plain    # classic [user@host dir]$ prompt
+#   OM_PROMPT_GIT=0          # skip git status inspection
+#   export SYSTEMD_PAGER=    # disable systemctl auto-paging
 
 # User specific aliases and functions

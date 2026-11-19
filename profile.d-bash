@@ -1,21 +1,35 @@
 # Special nice features for bash
 
-if [ "$PS1" ] && [ -n "$BASH" ]; then
-# automatically save the history after each command
-    PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+case $- in
+    *i*) ;;
+    *) return 0 ;;
+esac
+[ -n "${BASH_VERSION:-}" ] || return 0
 
-# do not save several time the same command in a row
-# HISTCONTROL=ignoredups
+# Preserve mc's ignorespace setting if already configured; otherwise enable
+# ignoreboth:erasedups for clean shared history.
+case ":${HISTCONTROL:-}:" in
+    *:ignorespace:*) ;;
+    *) export HISTCONTROL="ignoreboth:erasedups" ;;
+esac
 
-    if [ "$HISTCONTROL" = "ignorespace" ] ; then
-	[ -z "$HISTCONTROL" ] && export HISTCONTROL=ignoreboth:erasedups
-    else
-	[ -z "$HISTCONTROL" ] && export HISTCONTROL=ignoredups
-    fi
-
-# automatically correct the info on window size
-# do not do autocompletion on empty line
-# allow mixing history when several shells running in parallel
-# automatically fix the hash table of known commands
-    shopt -s checkwinsize no_empty_cmd_completion histappend checkhash 
+# Ensure history is flushed after each command if /etc/bashrc was not sourced
+# directly, without using bash-only array syntax at parse time (safe for dash/sh).
+if [ -z "${__OM_BASHRC_INITIALIZED:-}" ]; then
+    eval '
+        case " ${PROMPT_COMMAND[*]:-} " in
+            *"history -a"*|*"__om_prompt_precmd"*) ;;
+            *)
+                if declare -p PROMPT_COMMAND 2>/dev/null | grep -q "^declare -a "; then
+                    PROMPT_COMMAND=("history -a" "${PROMPT_COMMAND[@]}")
+                elif [ -n "${PROMPT_COMMAND:-}" ]; then
+                    PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+                else
+                    PROMPT_COMMAND="history -a"
+                fi
+                ;;
+        esac
+    '
 fi
+
+shopt -s checkwinsize no_empty_cmd_completion histappend checkhash cmdhist 2>/dev/null || :
