@@ -1,45 +1,42 @@
 #!/bin/sh
-# Linux-Mandrake configuration: Chmouel Boudjnah <chmouel@mandrakesoft.com>
+# Linux-Mandrake / OpenMandriva common interactive shell aliases.
 #
-# Common Aliases for a system.
-#
-# The Semantic is :
-#	If exist a ~/.alias and the user hasn't specified a
-#	LOAD_SYSTEM_ALIAS variables then don't do any system aliases
-#	If there is no ~/.alias but the user has specified a
-#	IGNORE_SYSTEM_ALIASES then don't do any system aliases.
+# If ~/.alias exists and LOAD_SYSTEM_ALIASES is unset, skip system aliases.
+# If IGNORE_SYSTEM_ALIASES is non-empty, skip system aliases.
 
-[ -f ~/.alias ] && [ -z $LOAD_SYSTEM_ALIASES ] && return 0
-[ -n "$IGNORE_SYSTEM_ALIASES" ] && return 0
+case $- in
+    *i*) ;;
+    *) return 0 ;;
+esac
 
-if [ -f ~/.dir_colors ]; then
-    eval $(dircolors --sh ~/.dir_colors)
-else
-    eval $(dircolors --sh /etc/DIR_COLORS)
+# Don't define aliases in plain Bourne shell.
+[ -n "${BASH_VERSION:-}${KSH_VERSION:-}${ZSH_VERSION:-}" ] || return 0
+
+[ -f "$HOME/.alias" ] && [ -z "${LOAD_SYSTEM_ALIASES:-}" ] && return 0
+[ -n "${IGNORE_SYSTEM_ALIASES:-}" ] && return 0
+
+if [ -z "${LS_COLORS:-}" ] && command -v dircolors >/dev/null 2>&1; then
+    if [ -f "$HOME/.dir_colors" ]; then
+        eval "$(dircolors --sh "$HOME/.dir_colors")"
+    elif [ -f /etc/DIR_COLORS ]; then
+        eval "$(dircolors --sh /etc/DIR_COLORS)"
+    fi
 fi
 
-# Don't define aliases in plain Bourne shell
-[ -n "${BASH_VERSION}${KSH_VERSION}${ZSH_VERSION}" ] || return 0
+# Note: do not add custom aliases here as this file is managed by the bash package;
+# put custom overrides in ~/.bashrc or a separate /etc/profile.d/*.sh file.
 
-# default ls options
 LS_OPTIONS="-F"
-
-# emacs doesn't support color
-if [ $TERM != "emacs" ];then
+if [ "${TERM:-dumb}" != "emacs" ] && [ "${TERM:-dumb}" != "dumb" ]; then
     LS_OPTIONS="$LS_OPTIONS --color=auto"
 fi
 
-# Note that you should not add custom aliases here as this file will be
-# overwritten when package bash is upgraded. Instead create an own profile
-# file for any added aliases.
-
 alias ls="ls $LS_OPTIONS"
-
 alias d="ls"
-alias l="ls"			# classical listing.
-alias ll="ls -l"		# List detailled.
-alias la='ls -a'		# List all.
-alias lsd="ls -d */"		# List only the directory.
+alias l="ls"
+alias ll="ls -lh"
+alias la="ls -la"
+alias lsd="ls -d */"
 alias cd..="cd .."
 alias s="cd .."
 alias p="cd -"
@@ -50,19 +47,18 @@ alias cp="cp -i"
 alias mv="mv -i"
 alias rm="rm -i"
 
-# colored grep by default
-alias grep="grep --color"
-# colored grep by default
-alias egrep="egrep --color"
-# colored grep by default
-alias fgrep="fgrep --color"
-# colored dmesg with human-readable timestamps by default
-alias dmesg="dmesg --ctime --color"
+# Colored grep without triggering obsolescent egrep/fgrep warnings
+if [ "${TERM:-dumb}" != "dumb" ]; then
+    alias grep="grep --color=auto"
+    alias egrep="grep -E --color=auto"
+    alias fgrep="grep -F --color=auto"
+    alias dmesg="dmesg --ctime --color=auto"
+else
+    alias egrep="grep -E"
+    alias fgrep="grep -F"
+fi
 
-# Size of a directory (by default Human Readable).
+# Human-readable sizes and progress by default
 alias du='du -h'
 alias dd='dd status=progress'
-
-# Size of a disk (by default Human Readable).
-# and don't probe supermount
 alias df='df -h -x supermount'
